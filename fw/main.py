@@ -1,3 +1,33 @@
+from fw.Program import Program
+
+if __name__ == "__main__":
+    sm = Program()
+    sm.run()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import sensor, image, time, os,  network, utime
 import config as cf
 import functions as fn
@@ -38,7 +68,7 @@ if cf.CONNECTIONS:
 
     if(node.connect_wifi()):
         node.connect_mqtt(cf.HOSTNAME)
-        node.subscribe_mqtt(cf.MQTT_TOPIC_LISTENER)
+        node.subscribe_mqtt(cf.MQTT_TOPIC_SUBSCRIBE)
          
 
 # Neural networks
@@ -46,6 +76,10 @@ net_plate = fn.load_net_model("trained_plate.tflite", "MODEL_PLATE")
 labels_plate = fn.load_labels("labels_plate.txt", "LABEL_PLATE")
 net_chars = fn.load_net_model("trained_chars.tflite", "MODEL_CHARS")
 labels_chars = fn.load_labels("labels_chars.txt", "LABEL_CHARS")
+
+"""
+implement fields convalidation of node
+"""
 
 
 """

@@ -44,7 +44,7 @@ class Node:
         self.MQTT_TOPIC_DEBUG = config.MQTT_TOPIC_DEBUG
         self.MQTT_TOPIC_TARGET = config.MQTT_TOPIC_TARGET
         self.MQTT_TOPIC_PLATE = config.MQTT_TOPIC_PLATE
-        self.MQTT_TOPIC_LISTENER = config.MQTT_TOPIC_LISTENER
+        self.MQTT_TOPIC_SUBSCRIBE = config.MQTT_TOPIC_SUBSCRIBE
         
         # before loading set to false
         self.MODEL_PLATES = False
@@ -105,7 +105,6 @@ class Node:
         if config.CONNECTIONS:
             self.wifi = network.WINC()
             self.wifi.connect(self.wifi_ssid,self.wifi_password)
-            dprint("Connecting...")
             
             start_time = utime.ticks_ms()
             
@@ -149,7 +148,7 @@ class Node:
             "MQTT_TOPIC_DEBUG": self.MQTT_TOPIC_DEBUG,
             "MQTT_TOPIC_TARGET": self.MQTT_TOPIC_TARGET,
             "MQTT_TOPIC_PLATE": self.MQTT_TOPIC_PLATE,
-            "MQTT_TOPIC_LISTENER": self.MQTT_TOPIC_LISTENER,
+            "MQTT_TOPIC_SUBSCRIBE": self.MQTT_TOPIC_SUBSCRIBE,
             "MODEL_PLATES": self.MODEL_PLATES,
             "MODEL_CHARS": self.MODEL_CHARS,
             "LABEL_PLATES": self.LABEL_PLATES,

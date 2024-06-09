@@ -1,4 +1,7 @@
 import config, uos, gc, tf, json
+from config import dprint 
+import config as cf
+
 
 
 def mqtt_callback(topic, msg):
@@ -27,8 +30,9 @@ def load_label(label_path, element):
         config.CLIENT.publish(config.MQTT_TOPIC_DEBUG, f'Failed to load {element}: {e}\n', qos=0)
         raise Exception(f'Failed to load {element}: {e}\n')
 
-# utility
 
+
+# utility
 def json_rect_string(plate_rect):
     plate_data = {
         "plate_x": plate_rect[0],
