@@ -1,4 +1,4 @@
-import sensor, image, time, os, network, utime, pyb
+import sensor, image, time, os, network, utime, pyb, ubinascii
 import config as cf
 import functions as fn
 from mqtt import MQTTClient
@@ -6,6 +6,17 @@ from config import dprint
 from node import Node
 
 class Program:
+    """    
+      _      _  __                     _      
+     | |    (_)/ _|                   | |     
+     | |     _| |_ ___  ___ _   _  ___| | ___ 
+     | |    | |  _/ _ \/ __| | | |/ __| |/ _ \
+     | |____| | ||  __/ (__| |_| | (__| |  __/
+     |______|_|_| \___|\___|\__, |\___|_|\___|
+                             __/ |            
+                            |___/             
+    """
+    
     def __init__(self):
         self.state = "start"
         self.clock = time.clock()
@@ -18,6 +29,23 @@ class Program:
         self.plate_text = ""
         self.in_msg = ""    
 
+    def mqtt_callback(self, topic, msg):
+        dprint("Received message on topic:", topic)
+        dprint("Message:", msg.decode('utf-8'))
+        self.in_msg = msg
+        self.status = "decode"
+
+    """
+      __  __            _     _            _           _        _                                                                                                                                                                              
+     |  \/  |          | |   (_)          ( )         | |      | |                                                                                                                                                                             
+     | \  / | __ _  ___| |__  _ _ __   ___|/ ___   ___| |_ __ _| |_ ___  ___                                                                                                                                                                   
+     | |\/| |/ _` |/ __| '_ \| | '_ \ / _ \ / __| / __| __/ _` | __/ _ \/ __|                                                                                                                                                                  
+     | |  | | (_| | (__| | | | | | | |  __/ \__ \ \__ \ || (_| | ||  __/\__ \                                                                                                                                                                  
+     |_|  |_|\__,_|\___|_| |_|_|_| |_|\___| |___/ |___/\__\__,_|\__\___||___/                                                                                                                                                                  
+                                                                                                                                                                                                                                               
+                                                                                                                                                                                                                                               
+    """
+    
     def start(self):
         dprint("Starting...")
         
@@ -52,12 +80,6 @@ class Program:
         else:
             self.state = "plate"
       
-    def mqtt_callback(self, topic, msg):
-        dprint("Received message on topic:", topic)
-        dprint("Message:", msg.decode('utf-8'))
-        self.in_msg = msg
-        self.status = "decode"
-        
     def connect_node(self):
         dprint("Connecting...")
         self.node = Node(cf.WIFI_SSID, 
@@ -127,6 +149,12 @@ class Program:
         
         img = sensor.snapshot()
         
+        if cf.ONLY_CAMERA:
+            self.plate_region = img.copy()
+            self.state = "img2base64"
+            return
+            
+            
         max_prob_obj = max(self.net_plate.classify(img, min_scale=1.0, scale_mul=0.8, x_overlap=0.5, y_overlap=0.5),
                        key=lambda obj: obj.output()[obj.class_id()],
                        default=None)
@@ -137,7 +165,7 @@ class Program:
             return
         
         dprint("Plate at [x=%d,y=%d,w=%d,h=%d]" % max_prob_obj.rect())
-        self.node.publish_mqtt(cf.MQTT_TOPIC_PLATE, fn.json_rect_string(roi=max_prob_obj.rect()))
+        self.node.publish_mqtt(cf.MQTT_TOPIC_IMAGE, fn.json_rect_string(roi=max_prob_obj.rect()))
             
         img.draw_rectangle(max_prob_obj.rect())
             
@@ -215,7 +243,23 @@ class Program:
         
         if self.node.connected:
             self.node.publish_mqtt(cf.MQTT_TOPIC_TARGET, "gate: 0", qos=0)     
-            
+    
+    def img2base64(self):
+        img_bytes = self.plate_region.compress()
+        img_base64 = ubinascii.b2a_base64(img_bytes).decode('utf-8')
+        self.node.publish_mqtt(cf.MQTT_TOPIC_IMAGE, img_base64)
+        self.status = "msg_in"
+        
+    """
+       _____ _        _                              _     _            
+      / ____| |      | |                            | |   (_)           
+     | (___ | |_ __ _| |_ ___   _ __ ___   __ _  ___| |__  _ _ __   ___ 
+      \___ \| __/ _` | __/ _ \ | '_ ` _ \ / _` |/ __| '_ \| | '_ \ / _ \
+      ____) | || (_| | ||  __/ | | | | | | (_| | (__| | | | | | | |  __/
+     |_____/ \__\__,_|\__\___| |_| |_| |_|\__,_|\___|_| |_|_|_| |_|\___|
+                                                                        
+                                                                        
+    """          
     def run(self):
         while True:
             state_functions = {
@@ -229,7 +273,8 @@ class Program:
                 "chars": self.chars,
                 "validation": self.validation,
                 "action_open": self.action_open,
-                "action_close": self.action_close
+                "action_close": self.action_close,
+                "only_camera": self.img2base64
             }
     
             state_function = state_functions.get(self.state)
@@ -243,7 +288,16 @@ class Program:
 
             dprint(self.clock.fps(), "fps")
 
-# Execute the state machine if this file is run directly
+"""
+  ______       _                            _       _   
+ |  ____|     | |                          (_)     | |  
+ | |__   _ __ | |_ _ __ _   _   _ __   ___  _ _ __ | |_ 
+ |  __| | '_ \| __| '__| | | | | '_ \ / _ \| | '_ \| __|
+ | |____| | | | |_| |  | |_| | | |_) | (_) | | | | | |_ 
+ |______|_| |_|\__|_|   \__, | | .__/ \___/|_|_| |_|\__|
+                         __/ | | |                      
+                        |___/  |_|                      
+"""
 if __name__ == "__main__":
     sm = Program()
     sm.run()

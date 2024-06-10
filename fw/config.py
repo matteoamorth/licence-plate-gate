@@ -6,19 +6,20 @@ WIFI_PASSWORD = "w"
 HOSTNAME = "openmv_client"
 MQTT_SERVER = "mqtt.example.com"
 MQTT_PORT = 1883
-MQTT_USER = "openmv_client"
-MQTT_PASSWORD = "your_mqtt_password"
+MQTT_USER = "usr"
+MQTT_PASSWORD = "psw"
 
 # topics
-MQTT_TOPIC_TARGET = "cam_target"
-MQTT_TOPIC_PLATE = "plate_pos"
+MQTT_TOPIC_IMAGE = "plate_pos"
 MQTT_TOPIC_DEBUG = "cam_debug"
-MQTT_TOPIC_PUBLISHER = ""
+MQTT_TOPIC_TARGET = "cam_target"
 MQTT_TOPIC_SUBSCRIBE = "plate_check"
 
 # settings 
 DEBUG = True
-CONNECTIONS = True # set True to work with external server, False to work local
+CONNECTIONS = True # set True to work with external server, False to work locally
+ONLY_CAMERA = True
+
 CONFIDENCE_TH = 0.75
 ACTUATOR = True
 ACTUATOR_OUT_PIN = "P6"

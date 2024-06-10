@@ -43,7 +43,7 @@ class Node:
         # default from config file
         self.MQTT_TOPIC_DEBUG = config.MQTT_TOPIC_DEBUG
         self.MQTT_TOPIC_TARGET = config.MQTT_TOPIC_TARGET
-        self.MQTT_TOPIC_PLATE = config.MQTT_TOPIC_PLATE
+        self.MQTT_TOPIC_IMAGE = config.MQTT_TOPIC_IMAGE
         self.MQTT_TOPIC_SUBSCRIBE = config.MQTT_TOPIC_SUBSCRIBE
         
         # before loading set to false
@@ -147,7 +147,7 @@ class Node:
             "MQTT_PASSWORD": self.mqtt_password,
             "MQTT_TOPIC_DEBUG": self.MQTT_TOPIC_DEBUG,
             "MQTT_TOPIC_TARGET": self.MQTT_TOPIC_TARGET,
-            "MQTT_TOPIC_PLATE": self.MQTT_TOPIC_PLATE,
+            "MQTT_TOPIC_IMAGE": self.MQTT_TOPIC_IMAGE,
             "MQTT_TOPIC_SUBSCRIBE": self.MQTT_TOPIC_SUBSCRIBE,
             "MODEL_PLATES": self.MODEL_PLATES,
             "MODEL_CHARS": self.MODEL_CHARS,
