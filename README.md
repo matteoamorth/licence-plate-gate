@@ -57,3 +57,49 @@ In the online configuration, plates detection and chars recognition can be perfo
 However, if the connection drops or the system is in stand alone configuration, the records must be stored on the device. This could be a serious vulnerability if it is not well protected.
 
 Another concern about security is the protection of the connection between devices. In this case the server act as the most critic element, because the publication of data on mqtt topics defines what other devices can do or not.
+
+## Installation 
+
+### Edge-device
+
+Open edge-device folder and copy all the files in the device folder
+
+### Server
+
+To set up a Raspberry Pi as an MQTT server to receive and process the images sent by your program, follow these steps:
+
++ Install MQTT Broker (Mosquitto)
++ Install Python and libraries
++ Upload the files
++ Run the server
+
+#### MQTT Broker
+
+Copy and paste these commands in a raspberry's shell:
+
+``` bash
+sudo apt update
+sudo apt install mosquitto mosquitto-clients
+sudo systemctl enable mosquitto
+sudo systemctl start mosquitto
+```
+
+#### Python and libraries
+
+Copy and paste these commands in a raspberry's shell:
+
+``` bash
+sudo apt install python3 python3-pip
+pip3 install paho-mqtt numpy opencv-python
+```
+#### Upload files 
+
+Copy the files contained in the server folder into the raspberry storage
+
+#### Run the server
+
+Browse into the folder containing previous files and run this command:
+
+``` bash
+python3 mqtt_image_receiver.py
+```

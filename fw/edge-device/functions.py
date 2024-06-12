@@ -2,15 +2,6 @@ import config, uos, gc, tf, json
 from config import dprint 
 import config as cf
 
-
-
-def mqtt_callback(topic, msg):
-    dprint("Received message on topic: ", topic)
-    dprint("Message: ", msg)
-    if(msg == "registered"):
-        dprint("perform function")
-        
-
 # neural network functions
 def load_net_model(model_path, element):
     try:

@@ -83,11 +83,11 @@ class Program:
     def connect_node(self):
         dprint("Connecting...")
         self.node = Node(cf.WIFI_SSID, 
-                             cf.WIFI_PASSWORD,
-                             cf.MQTT_SERVER, 
-                             cf.MQTT_PORT, 
-                             cf.MQTT_USER, 
-                             cf.MQTT_PASSWORD)
+                            cf.WIFI_PASSWORD,
+                            cf.MQTT_SERVER, 
+                            cf.MQTT_PORT, 
+                            cf.MQTT_USER, 
+                            cf.MQTT_PASSWORD)
         
         if self.node.connect_wifi():
             self.node.connect_mqtt(cf.HOSTNAME)
@@ -153,7 +153,7 @@ class Program:
             self.plate_region = img.copy()
             self.state = "img2base64"
             return
-            
+  
             
         max_prob_obj = max(self.net_plate.classify(img, min_scale=1.0, scale_mul=0.8, x_overlap=0.5, y_overlap=0.5),
                        key=lambda obj: obj.output()[obj.class_id()],
