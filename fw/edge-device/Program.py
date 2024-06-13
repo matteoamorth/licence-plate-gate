@@ -111,9 +111,9 @@ class Program:
             self.state = "reset"
             return
         
-        if(self.in_msg == "network_status"):
+        if(self.in_msg == "status"):
             self.state = "plate"
-            self.node.publish_mqtt(self.node.MQTT_TOPIC_TARGET, self.node.status)
+            self.node.publish_mqtt(self.node.MQTT_TOPIC_TARGET, self.node.status())
             return
         
         if(self.in_msg == "gate_status"):
@@ -129,7 +129,7 @@ class Program:
             self.state = "action_open"   
             return
         
-        self.state = "reset"
+        self.state = "plate"
 
     def reset(self):
         dprint("Resetting...")

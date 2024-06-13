@@ -1,8 +1,12 @@
 import paho.mqtt.client as mqtt
+import functions as fn
 import numpy as np
 import cv2
 import base64
 from influxdb_client import InfluxDBClient, Point, WriteOptions
+
+#general settings
+DEBUG = 1
 
 # MQTT settings
 MQTT_BROKER = "localhost"
@@ -18,6 +22,8 @@ INFLUXDB_TOKEN = "xxx"
 INFLUXDB_ORG = "xxx"
 INFLUXDB_BUCKET = "plate_records"
 
+dprint = print if DEBUG else lambda *args, **kwargs: None
+
 class ServerStateMachine:
     def __init__(self):
         self.state = "start"
@@ -28,12 +34,7 @@ class ServerStateMachine:
         self.client.connect(MQTT_BROKER, MQTT_PORT, 60)
         self.client.subscribe(MQTT_TOPIC_IMAGE)
         self.client.loop_start()
-        self.influx_client = InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN)
-        self.write_api = self.influx_client.write_api(write_options=WriteOptions(batch_size=500, flush_interval=10_000, jitter_interval=2_000, retry_interval=5_000))
-
-        
-        ## models loading ...
-        
+                
     def on_message(self, client, userdata, msg):
         try:
             
@@ -48,6 +49,31 @@ class ServerStateMachine:
         except Exception as e:
             print(f"Failed to process image: {e}")
 
+    def start(self):
+        self.net_plate = fn.load_net_model("trained_plate.tflite", "MODEL_PLATE")
+        self.labels_plate = fn.load_labels("labels_plate.txt", "LABEL_PLATE")
+        self.net_chars = fn.load_net_model("trained_chars.tflite", "MODEL_CHARS")
+        self.labels_chars = fn.load_labels("labels_chars.txt", "LABEL_CHARS")
+ 
+        if not self.net_plate or not self.labels_plate or not self.net_chars or not self.labels_chars:
+            dprint("Error: One or more models/labels failed to load.")
+            self.state = "reset"
+            return     
+        
+        self.influx_client = InfluxDBClient(url=INFLUXDB_URL, token=INFLUXDB_TOKEN)
+        self.write_api = self.influx_client.write_api(write_options=WriteOptions(batch_size=500, flush_interval=10_000, jitter_interval=2_000, retry_interval=5_000))
+        self.state = "idle"
+    
+    def idle(self):
+        dprint("Looking for incoming messages...")
+        
+        # check edge device status
+        self.client.publish(MQTT_TOPIC_TARGET, "status")
+        # 
+        
+        
+        self.node.mqtt_client.check_msg()
+        
     def detect_plate(self, img):
         max_prob_obj = max(self.net_plate.classify(img, min_scale=1.0, scale_mul=0.8, x_overlap=0.5, y_overlap=0.5),
                        key=lambda obj: obj.output()[obj.class_id()],
@@ -73,8 +99,6 @@ class ServerStateMachine:
         else:
             self.plate_region = img.copy(roi=max_prob_obj.rect())
             
-        
-
     def recognize_chars(self, img, roi):
         self.plate_text = ""
         chars_predictions = self.net_chars.classify(self.plate_region, min_scale=1.0, scale_mul=0.8, x_overlap=0.5, y_overlap=0.5)
@@ -114,7 +138,7 @@ class ServerStateMachine:
 
     def run(self):
         
-        ## remove states uneccessary
+        ## remove states unnecessary
         
         while True:
             state_functions = {
