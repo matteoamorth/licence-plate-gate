@@ -16,17 +16,9 @@ class Node:
                              __/ |            
                             |___/             
     """
-    def __init__(self, wifi_ssid, wifi_password, mqtt_server, mqtt_port, mqtt_user, mqtt_password):
+    def __init__(self, wifi_ssid, wifi_password, mqtt_server, mqtt_port, mqtt_user, mqtt_password, topic_dbg, topic_target, topic_sub):
         """
         Initializes a new Node object with the specified parameters.
-
-        Args:
-            wifi_ssid (str): Wi-Fi network SSID.
-            wifi_password (str): Wi-Fi network password.
-            mqtt_server (str): MQTT server address.
-            mqtt_port (int): MQTT server port.
-            mqtt_user (str): MQTT username for authentication.
-            mqtt_password (str): MQTT password for authentication.
         """
         
         self.wifi = ""
@@ -41,56 +33,10 @@ class Node:
         self.mqtt_password = mqtt_password
         
         # default from config file
-        self.MQTT_TOPIC_DEBUG = config.MQTT_TOPIC_DEBUG
-        self.MQTT_TOPIC_TARGET = config.MQTT_TOPIC_TARGET
-        self.MQTT_TOPIC_IMAGE = config.MQTT_TOPIC_IMAGE
-        self.MQTT_TOPIC_SUBSCRIBE = config.MQTT_TOPIC_SUBSCRIBE
+        self.MQTT_TOPIC_DEBUG = topic_dbg
+        self.MQTT_TOPIC_TARGET = topic_target
+        self.MQTT_TOPIC_SUBSCRIBE = topic_sub
         
-        # before loading set to false
-        self.MODEL_PLATES = False
-        self.MODEL_CHARS = False
-        self.LABEL_PLATES = False
-        self.LABEL_CHARS = False
-    
-    
-    """
-                                                   
-         /\                                        
-        /  \   ___ ___ ___  ___ ___  ___  _ __ ___ 
-       / /\ \ / __/ __/ _ \/ __/ __|/ _ \| '__/ __|
-      / ____ \ (_| (_|  __/\__ \__ \ (_) | |  \__ \
-     /_/    \_\___\___\___||___/___/\___/|_|  |___/
-                                                   
-                                                   
-    """
-    
-    def set_mqtt(self, mqtt_client):
-        """Saves connection in object
-
-        Args:
-            mqtt_client (Network connection): MQTT object
-        """
-        self.mqtt_client = mqtt_client
-    
-    def set_topic(self,topic_field,value):
-        """Set a new value to MQTT topics
-
-        Args:
-            topic: Topic to be changed
-            value: topic name
-        """
-        setattr(self, topic_field, value)
-
-    def get_field(self, field):
-        """Get the value of the specified field
-
-        Args:
-            field (str): Field to retrieve.
-
-        Returns:
-            str: Value of the field.
-        """
-        return getattr(self, field)
     
     """
       __  __      _   _               _     
@@ -102,40 +48,39 @@ class Node:
                                                                                   
     """
     def connect_wifi(self):
-        if config.CONNECTIONS:
-            self.wifi = network.WINC()
-            self.wifi.connect(self.wifi_ssid,self.wifi_password)
+
+        self.wifi = network.WINC()
+        self.wifi.connect(self.wifi_ssid,self.wifi_password)
             
-            start_time = utime.ticks_ms()
+        start_time = utime.ticks_ms()
             
-            while not self.wifi.isconnected():
-                if utime.ticks_diff(utime.ticks_ms(), start_time) >= 10000: 
-                    self.connected = False
-                    break
-                time.sleep_ms(50)
-            else:
-                self.connected = True
-                dprint(self.connection_info())
+        while not self.wifi.isconnected():
+            if utime.ticks_diff(utime.ticks_ms(), start_time) >= 10000: 
+                self.connected = False
+                break
+            time.sleep_ms(50)
+        else:
+            self.connected = True
+            dprint(self.connection_info())
         
         return self.connected
     
-    def connect_mqtt(self, hostname):
-        self.mqtt_client = MQTTClient(hostname, self.mqtt_server, port=self.mqtt_port, user=self.mqtt_user, password=self.mqtt_password)
+    def connect_mqtt(self):
         self.mqtt_client.connect()
+        self.mqtt_client.subscribe(self.MQTT_TOPIC_SUBSCRIBE)
         
-    def subscribe_mqtt(self,topic):
-        self.mqtt_client.subscribe(topic)
     
-    def publish_mqtt(self, topic, msg):
-        if self.connected:
-            self.mqtt_client.publish(topic, msg)
+    def publish_mqtt(self, msg):
+        self.mqtt_client.publish(self.MQTT_TOPIC_TARGET, msg)
+    
+    def publish_mqtt_debug(self, msg):
+        self.mqtt_client.publish(self.MQTT_TOPIC_DEBUG, msg)
         
     def status(self):
         """
         Returns the status of the Node as a JSON object.
         """
         status_dict = {
-            "CONNECTION": self.connected,
             "WIFI_SSID": self.wifi_ssid,
             "WIFI_IP": self.wifi.ifconfig()[0],
             "WIFI_SUBNET_MASK": self.wifi.ifconfig()[1],
@@ -144,15 +89,9 @@ class Node:
             "MQTT_SERVER": self.mqtt_server,
             "MQTT_PORT": self.mqtt_port,
             "MQTT_USER": self.mqtt_user,
-            "MQTT_PASSWORD": self.mqtt_password,
             "MQTT_TOPIC_DEBUG": self.MQTT_TOPIC_DEBUG,
             "MQTT_TOPIC_TARGET": self.MQTT_TOPIC_TARGET,
-            "MQTT_TOPIC_IMAGE": self.MQTT_TOPIC_IMAGE,
-            "MQTT_TOPIC_SUBSCRIBE": self.MQTT_TOPIC_SUBSCRIBE,
-            "MODEL_PLATES": self.MODEL_PLATES,
-            "MODEL_CHARS": self.MODEL_CHARS,
-            "LABEL_PLATES": self.LABEL_PLATES,
-            "LABEL_CHARS": self.LABEL_CHARS
+            "MQTT_TOPIC_SUBSCRIBE": self.MQTT_TOPIC_SUBSCRIBE
         }
         return json.dumps(status_dict, indent=4)
     
