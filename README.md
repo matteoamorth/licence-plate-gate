@@ -15,7 +15,7 @@ The functioning of this systems follows these steps.
 
 2. **Chars recognition**: identify chars inside the licence plate;
 
-3. **Data transmission (connected version)**: establish a connection with the server and forward the data;
+3. **Data transmission (only connected version)**: establish a connection with the server and forward the data;
 
 4. **Evaluation**: define if the record is present;
 
@@ -62,7 +62,7 @@ Another concern about security is the protection of the connection between devic
 
 ### Edge-device
 
-Open edge-device folder and copy all the files in the device folder
+Open edge-device folder and copy all the files in the device folder. To decide which mode to use, open the `config.ini` file and edit the `MODE` field 
 
 ### Server
 

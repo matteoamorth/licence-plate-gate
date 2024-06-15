@@ -1,5 +1,4 @@
 import sensor, image, time, os, network, utime, pyb, ubinascii, re, json
-import config as cof
 import functions as fn
 from mqtt import MQTTClient
 from config import dprint      
@@ -10,6 +9,9 @@ OFFLINE_MODE = 0
 STRING_MODE  = 1
 CHARS_MODE   = 2
 CAMERA_MODE  = 3
+DEBUG = True
+
+
 
 class Program:
     """    
@@ -57,7 +59,10 @@ class Program:
         except ValueError as e:
             dprint(f"Failed to parse JSON message: {e}")
         
-
+    def dprint(self,*args):
+        if self.DEBUG:
+            print(*args)
+            
     """
       __  __            _     _            _           _        _                                                                                                                                                                              
      |  \/  |          | |   (_)          ( )         | |      | |                                                                                                                                                                             
@@ -81,6 +86,7 @@ class Program:
         self.cf = fn.load_config('config.ini')
         self.id = self.cf['Settings']['DEVICE_ID']
         self.mode = self.cf['Settings']['MODE']
+        self.DEBUG = self.cf['Settings']['DEBUG']
         
         self.state = 'load_models' if (self.mode != CAMERA_MODE) else 'load_connections'
         
@@ -275,8 +281,7 @@ class Program:
         time.sleep_ms(50)
         self.msg_payload = None
         self.state = 'plate'
-        
-       
+              
     def action_open(self):
         if self.pinOut and self.pinClosed.value():
             self.pinOut.high()
