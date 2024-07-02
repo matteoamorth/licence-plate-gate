@@ -5,6 +5,13 @@ from influxdb_client import InfluxDBClient, Point, WriteOptions
 import paho.mqtt.client as mqtt
 import configparser
 
+import cv2
+import base64
+import requests
+import matplotlib.pyplot as plt
+import keras_ocr
+import numpy as np
+
 from inference_sdk import InferenceHTTPClient
 
 # MODE constants
@@ -76,24 +83,7 @@ class ServerStateMachine:
         self.check_string_record(self.msg_payload)
         self.state = "idle"            
   
-    def crop_best_prediction(self, image, best_prediction):
-        x = best_prediction['x']
-        y = best_prediction['y']
-        width = best_prediction['width']
-        height = best_prediction['height']
-
-        # Calculate the coordinates of the rectangle
-        left = x - width / 2
-        top = y - height / 2
-        right = x + width / 2
-        bottom = y + height / 2
-
-        # Crop the image based on the best prediction
-        cropped_image = image.crop((left, top, right, bottom))
-
-        dprint(f"Cropped image created")
-
-        return cropped_image      
+        
 
     def analysis(self):
         dprint("Processing images...")
@@ -125,10 +115,60 @@ class ServerStateMachine:
         self.target = best_plate
         img = crop_best_prediction(img,self.target)
         ### chars detection
-    
+
+        # process img
+        preprocessImage(img)
+        
+        #evaluate
+        
+        images = [keras_ocr.tools.read(img)]
+        # Get Predictions
+        prediction_groups = pipeline.recognize(images)
+        # Print the predictions
+        for predictions in prediction_groups:
+            for prediction in predictions:
+                print(prediction[0])
+        
+        
+        
+        
+    def preprocessImage(image):
+        # Read Image
+        img = cv2.imread(image)
+        # Resize Image
+        img = cv2.resize(img, None, fx=1.2, fy=1.2, interpolation=cv2.INTER_CUBIC)
+        # Change Color Format
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        # Kernel to filter image
+        kernel = np.ones((1, 1), np.uint8)
+        # Dilate + Erode image using kernel
+        img = cv2.dilate(img, kernel, iterations=1)
+        img = cv2.erode(img, kernel, iterations=1)
+        img = cv2.addWeighted(img, 4, cv2.blur(img, (30, 30)), -4, 128)
+        # Save + Return image
+        cv2.imwrite('processed.jpg', img)
+        img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        return img
     
 
-        
+    def crop_best_prediction(self, image, best_prediction):
+        x = best_prediction['x']
+        y = best_prediction['y']
+        width = best_prediction['width']
+        height = best_prediction['height']
+
+        # Calculate the coordinates of the rectangle
+        left = x - width / 2
+        top = y - height / 2
+        right = x + width / 2
+        bottom = y + height / 2
+
+        # Crop the image based on the best prediction
+        cropped_image = image.crop((left, top, right, bottom))
+
+        dprint(f"Cropped image created")
+
+        return cropped_image    
         
         
 
