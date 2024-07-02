@@ -1,0 +1,6 @@
+#group,false,false,false,false
+#datatype,string,string,string,dateTime:RFC3339
+#default,accesses,,,
+measurement,device_id,action,timestamp
+accesses,0001,gate_open,2024-06-17T13:00:00Z
+accesses,0002,gate_open,2024-06-17T13:10:00Z

@@ -1,7 +1,5 @@
 import sensor, image, time, os, network, utime, pyb, ubinascii, re, json
-import functions as fn
-from mqtt import MQTTClient
-from config import dprint      
+import functions as fn  
 from node import Node
 
 CONFIG_FILENAME = "config.ini"
@@ -11,7 +9,9 @@ CHARS_MODE   = 2
 CAMERA_MODE  = 3
 DEBUG = True
 
-
+def dprint(self,*args):
+    if self.DEBUG:
+            print(*args)
 
 class Program:
     """    
@@ -59,9 +59,8 @@ class Program:
         except ValueError as e:
             dprint(f"Failed to parse JSON message: {e}")
         
-    def dprint(self,*args):
-        if self.DEBUG:
-            print(*args)
+    
+        
             
     """
       __  __            _     _            _           _        _                                                                                                                                                                              
@@ -231,8 +230,8 @@ class Program:
         records = self.cf['Records']['RECORDS']
         if self.msg_payload in records:
             self.state = "action_open"
-
-        self.state = "plate"
+        else:
+            self.state = "plate"
      
     def idle(self):
         dprint("Looking for incoming messages...")
@@ -288,12 +287,9 @@ class Program:
             time.sleep_ms(50)
             self.pinOut.low()
         
-        
-        
         if self.node.connected:
             self.node.publish_mqtt_devug("gate: 1", qos=0)
-            
-            
+              
         self.state = "plate"
     
     def action_close(self):
@@ -302,7 +298,7 @@ class Program:
             time.sleep_ms(50)
             self.pinOut.low()
         
-        self.plate_text = ""
+        
         self.in_msg = None
         
         if self.node.connected:

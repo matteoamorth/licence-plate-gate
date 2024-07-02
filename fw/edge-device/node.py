@@ -1,7 +1,4 @@
-import json
-import config
-import network, time, utime
-from config import dprint
+import network, time, utime, json
 from mqtt import MQTTClient
 
 class Node:
