@@ -43,7 +43,9 @@ DEBUG = True
 
 # Macros
 dprint = print if DEBUG else lambda *args, **kwargs: None
-pipeline = keras_ocr.pipeline.Pipeline()
+
+dprint('######################################################################\n\nPlate recognition server\n\n######################################################################\n')
+#pipeline = keras_ocr.pipeline.Pipeline()
 
 
 ######################################################################
@@ -63,13 +65,14 @@ class Program:
     
     def __init__(self):
          
-        dprint('Setting up server...')
+        dprint('Setting up server...\n')
         
         self.state = 'idle'
         self.msg_payload = None
         self.client_mode = None # defined by client
         self.img = None
         self.prediction = None
+        self.mode = None
         
         # import settings
         config = configparser.ConfigParser()
@@ -77,24 +80,28 @@ class Program:
         
         self.DEVICE_ID = config['Settings']['DEVICE_ID']
         self.CLIENT_ID = config['Settings']['CLIENT_ID'] ## make it an array
-        self.mode = config['Settings']['MODE']
+        
         
         # model 
         self.MODEL_ID = config['Roboflow']['MODEL_ID']
         self.robo_client =  InferenceHTTPClient(
-                                api_url = config['Roboflow']['API_URL'],
-                                api_key = config['Roboflow']['API_KEY'])
+            api_url = config['Roboflow']['API_URL'],
+            api_key = config['Roboflow']['API_KEY'])
         
         # influx 
         self.influx_client = InfluxDBClient(url=config['InfluxDB']['INFLUXDB_URL'], token=config['InfluxDB']['INFLUXDB_TOKEN'])
-        self.write_api = self.influx_client.write_api(write_options=WriteOptions(batch_size=500, flush_interval=10_000, jitter_interval=2_000, retry_interval=5_000))
+        self.write_api = self.influx_client.write_api(write_options=WriteOptions(batch_size=500, 
+                                                                                 flush_interval=10_000, 
+                                                                                 jitter_interval=2_000, 
+                                                                                 retry_interval=5_000))
         self.influx_org = config['InfluxDB']['INFLUXDB_ORG']
-        self.influx_bucket =config['InfluxDB']['INFLUXDB_BUCKET']
+        self.influx_bucket = config['InfluxDB']['INFLUXDB_BUCKET']
         
         # mqtt
         self.mqtt_client = mqtt.Client()
+        self.mqtt_client.username_pw_set(config['MQTT Settings']['USER'], config['MQTT Settings']['PASSWORD'])
         self.mqtt_client.on_message = self.on_message
-        self.mqtt_client.connect(self.DEVICE_ID, config['MQTT Settings']['PORT'], 60)
+        self.mqtt_client.connect(config['MQTT Settings']['BROKER'], int(config['MQTT Settings']['PORT']), 60)
         self.mqtt_client.subscribe(config['MQTT Topics']['TOPIC_SUBSCRIBE'])
         
         self.mqtt_sub = config['MQTT Topics']['TOPIC_SUBSCRIBE']
@@ -163,7 +170,7 @@ class Program:
         self.img = self.base2image(self.msg_payload)
         
         if self.img is None:
-            dprint('No image decoded'); 
+            dprint('No image decoded') 
             self.state = 'idle'
             self.mqtt_client.loop_start()
             return
@@ -228,8 +235,7 @@ class Program:
                 self.mqtt_client.loop_start()
                 return
         
-        # preprocessing
-        img = cv2.imread(img)
+        # Preprocessing
         img = cv2.resize(img, None, fx=1.2, fy=1.2, interpolation=cv2.INTER_CUBIC)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         kernel = np.ones((1, 1), np.uint8)
@@ -238,15 +244,14 @@ class Program:
         img = cv2.addWeighted(img, 4, cv2.blur(img, (30, 30)), -4, 128)
         self.img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         
-        # evaluation
+        # Evaluation
         images_list = [keras_ocr.tools.read(self.img)]
         prediction_groups = pipeline.recognize(images_list)
         predictions = prediction_groups[0]
         sorted_predictions = sorted(predictions, key=lambda p: p[1][0][0])
         
-        recognized_text = ''
-        for prediction in sorted_predictions:
-            recognized_text += prediction[0]
+        recognized_text = ''.join([prediction[0] for prediction in sorted_predictions])
+
         
         dprint(f"Recognized text: {recognized_text}")
         self.msg_payload = recognized_text
@@ -265,8 +270,9 @@ class Program:
     def string_detection(self):
         dprint('Processing STRING_MODE...')
         
-        query = 'from(bucket: "{self.influx_debug}") |> filter(fn: (r) => r["_measurement"] == "plates_registered" and r["plate_number"] == "{self.msg_payload}")'
-
+        query = 'from(bucket: "{self.influx_bucket}") |> ' \
+                'filter(fn: (r) => r["_measurement"] == "plates_registered" and ' \
+                'r["plate_number"] == "{self.msg_payload}")'
         try:
             result = self.influx_client.query_api().query(query=query, org=self.influx_org)
 
@@ -310,7 +316,7 @@ class Program:
             'plate_detection': self.plate_detection,
             'chars_detection': self.chars_detection,
             'string_detection': self.string_detection,
-            'img_crop' : self.img_crop
+            'img_crop': self.img_crop
         }
 
         while True:

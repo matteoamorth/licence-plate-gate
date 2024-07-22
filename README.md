@@ -103,3 +103,13 @@ Browse into the folder containing previous files and run this command:
 ``` bash
 python3 mqtt_image_receiver.py
 ```
+
+
+
+\begin{equation*}
+\begin{cases}
+\sqrt{(x_2 - x)^2 + (y_2 - y)^2} - \sqrt{(x_1 - x)^2 + (y_1 - y)^2} = r_{21} \\
+\sqrt{(x_3 - x)^2 + (y_3 - y)^2} - \sqrt{(x_1 - x)^2 + (y_1 - y)^2} = r_{31}
+\end{cases}
+\tag{1}
+\end{equation*}
