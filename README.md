@@ -87,6 +87,7 @@ The software provided in this project allow to select different solutions based 
 In the offline mode, plate detection, characters recognition, record evaluation and actuation are performed on the device stand-alone.
 
 **Key features**
+
 ➕ Configure a single device without a server.
 
 ➕ Connection is not requested.
@@ -102,6 +103,7 @@ This flow can be selected setting the field `MODE = 0`;
 In simple database, plate detection and characters recognition are performed on board, while record evaluation is left to the server-side.
 
 **Key features**
+
 ➕ Database easily updatable.
 
 ➕ Perform actions with remote commands.
@@ -117,6 +119,7 @@ This flow can be selected setting the field `MODE = 1`;
 In the balanced configuration, plate detection is performed on board, while characters recognition and evaluation is performed by server-side.
 
 **Key features**
+
 ➕ Better tasks and resources organization.
 
 ➕ Edge-device filters data for server, acting as a fog-device.
@@ -130,6 +133,7 @@ In the balanced configuration, plate detection is performed on board, while char
 On lightweight camera, image acquisition is the only task installed on the board, all the other operations are performed on the connected server.
 
 **Key features**
+
 ➕ Low specs required for edge-device.
 
 ➕ Server can deliver results faster.
