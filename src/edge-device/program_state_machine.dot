@@ -6,7 +6,6 @@ digraph "State Machine"{
     load_models
     load_connections
     load_gpio
-    idle
     decode
     reset
     plate
@@ -14,8 +13,9 @@ digraph "State Machine"{
     send_msg
     validation
     action_open
-    action_close
+    
     img2base64
+    exit
     
 
     # transitions
@@ -25,17 +25,17 @@ digraph "State Machine"{
     setup->load_models
     setup->load_connections
 
-    load_models->reset
+    load_models->exit
     load_models->load_connections
     load_models->load_gpio
 
     load_connections->load_gpio
-    load_connections->load_models
+    load_connections->exit
 
     load_gpio->plate
 
     plate->img2base64
-    plate->idle
+
     plate->plate
     plate->chars
 
@@ -43,24 +43,28 @@ digraph "State Machine"{
 
     chars->send_msg
     chars->validation
-    chars->idle
+    
     chars->plate
 
     validation->action_open
     validation->plate
 
-    idle->plate
-    idle->decode
+    
     
     send_msg->plate
+    send_msg->decode
 
     decode->reset
-    decode->action_close
+    decode->plate
+    
     decode->action_open
+    decode->exit
 
-    action_close->idle
-    action_open->idle
+    
+    action_open->plate
     
     reset->setup
 
+    start [shape=Mdiamond];
+    exit [shape=Mdiamond];
 }

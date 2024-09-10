@@ -58,10 +58,7 @@ class Program:
                 
         except ValueError as e:
             dprint(f"Failed to parse JSON message: {e}")
-        
-    
-        
-            
+                 
     """
       __  __            _     _            _           _        _                                                                                                                                                                              
      |  \/  |          | |   (_)          ( )         | |      | |                                                                                                                                                                             
@@ -88,31 +85,28 @@ class Program:
         self.DEBUG = self.cf['Settings']['DEBUG']
         
         self.state = 'load_models' if (self.mode != CAMERA_MODE) else 'load_connections'
-        
+
     def load_models(self):
         dprint("Setting up models...")
-          
-        self.net_plate = fn.load_net_model("trained_plate.tflite", "MODEL_PLATE")
-        self.labels_plate = fn.load_label("labels_plate.txt", "LABEL_PLATE")
         
-        if not self.net_plate or not self.labels_plate:
-            dprint("Error: One or more models/labels failed to load.")
-            self.state = "reset"
+        self.net_plate = fn.load_net_model(self, "trained_plate.tflite", "net_plate")
+        if self.state == "exit":
+            return
+        
+        self.labels_plate = fn.load_net_model(self, "labels_plate.txt", "labels_plate") 
+        if self.state == "exit":
             return
         
         if self.mode != CHARS_MODE:
-            self.net_chars = fn.load_net_model("trained_chars.tflite", "MODEL_CHARS")
-            self.labels_chars = fn.load_labels("labels_chars.txt", "LABEL_CHARS")
+            self.net_chars = fn.load_net_model(self, "trained_chars.tflite", "net_chars")
+            if self.state == "exit":
+                return
             
-            if not self.net_chars or not self.labels_chars:
-                dprint("Error: One or more models/labels failed to load.")
-                self.state = "reset"
+            self.labels_chars = fn.load_net_model(self, "labels_chars.txt", "labels_chars")
+            if self.state == "exit":
                 return
         
-        if self.mode != OFFLINE_MODE:
-            self.state = "load_connections"
-        else:
-            self.state = "load_gpio"
+        self.state = "load_connections" if self.mode != OFFLINE_MODE else "load_gpio"
            
     def load_connections(self):
         dprint("Connecting...")
@@ -126,25 +120,22 @@ class Program:
                             self.cf['TOPIC_DEBUG']['TOPIC_TARGET'],
                             self.cf['TOPIC_DEBUG']['TOPIC_SUBSCRIBE'])
         
-        if self.node.connect_wifi():
-            self.state = "load_gpio"
-            
-            dprint("Connected to WIFI. Setting up MQTT...")
-            self.node.connect_mqtt()
-            self.node.mqtt_client.set_callback(self.mqtt_callback)
-            
-            # check server status - to be implemented
-            """
-            self.node.publish_mqtt(self.node.MQTT_TOPIC_DEBUG, "Test")
-            dprint("")
-            """
-            
+        if not self.node.connect_wifi():
+            dprint("Can't connect to WIFI")
+            self.state = "exit"
             return
-       
-        dprint("Can't connect to WIFI")
-        self.mode = OFFLINE_MODE
-        self.node = None
-        self.state = "load_models"
+        
+        dprint("Connected to WIFI. Setting up MQTT...")
+        self.node.connect_mqtt()
+        self.node.mqtt_client.set_callback(self.mqtt_callback)
+        
+        self.state = "load_gpio"
+        
+        # check server status - to be implemented
+        """
+        self.node.publish_mqtt(self.node.MQTT_TOPIC_DEBUG, "Test")
+        dprint("")
+        """    
             
     def load_gpio(self):
         if self.cf['Output']['ACTUATOR']:
@@ -159,7 +150,6 @@ class Program:
         
         img = sensor.snapshot()
         
-        
         # CAMERA_MODE: only images acquired on the device
         if self.mode == CAMERA_MODE:
             self.msg_payload = img.copy()
@@ -171,23 +161,26 @@ class Program:
                        key=lambda obj: obj.output()[obj.class_id()],
                        default=None)
         
-        # if nothing detected, redirect to other states
+        # if nothing detected, restart status
         if not max_prob_obj:
-            self.state = "idle" if self.mode else "plate"
             self.msg_payload = None
             return
         
-        # CHARS_MODE: only plate region is detected on board 
+        # CHARS_MODE & STRING_MODE 
         if self.msg_payload:
+            dprint("Second instance of plate")
             if self.msg_payload[2] <= max_prob_obj.rect()[2]:
+                dprint("Incoming car")
                 self.msg_payload = img.copy(roi=max_prob_obj.rect())
                 self.state = "img2base64" if self.mode == CHARS_MODE else "chars"
                 return
             else:
+                dprint("Leaving car")
                 self.msg_payload = None
-                self.state = "idle" if self.state else "plate"
+                self.state = "plate"
                 return
         else:
+            dprint("First instance of plate")
             self.msg_payload = img.copy(roi=max_prob_obj.rect())    
                 
         
@@ -206,7 +199,7 @@ class Program:
         
         for char_obj in chars_predictions:
             char_predictions_list = list(zip(self.labels_chars, char_obj.output()))
-            dprint(best_prediction)
+            dprint(char_predictions_list)
             
             best_prediction = max(char_predictions_list, key=lambda x: x[1])
             dprint(best_prediction)
@@ -223,20 +216,15 @@ class Program:
             self.state = "send_msg" if self.mode != OFFLINE_MODE else "validation"
         
         else:
-            dprint("No characters recognized with sufficient confidence")
-            self.state = "idle" if self.mode != OFFLINE_MODE else "plate"
+            dprint("No chars with sufficient confidence")
+            self.state = "plate"
         
     def validation(self):
         records = self.cf['Records']['RECORDS']
         if self.msg_payload in records:
             self.state = "action_open"
         else:
-            self.state = "plate"
-     
-    def idle(self):
-        dprint("Looking for incoming messages...")
-        self.node.mqtt_client.check_msg()
-        self.state = "plate"
+            self.state = "plate"   
 
     def decode(self):
         dprint("Decoding msg...")
@@ -246,20 +234,24 @@ class Program:
             self.in_msg = "" 
             return
         
-        if(self.in_msg == "status"):
-            self.state = "idle"
+        if(self.in_msg == "exit"):
+            self.state = "exit"
             self.in_msg = "" 
             return
         
+        """
         if(self.in_msg == "gate_status"):
-            self.state = "idle"
+            self.state = ""
             self.in_msg = "" 
             return
+        """
         
+        """
         if(self.in_msg == "gate_close"):
             self.state = "action_close" 
             self.in_msg = "" 
             return 
+        """
         
         if(self.in_msg == "gate_open"):
             self.state = "action_open"  
@@ -288,7 +280,7 @@ class Program:
             self.pinOut.low()
         
         if self.node.connected:
-            self.node.publish_mqtt_devug("gate: 1", qos=0)
+            self.node.publish_mqtt_debug("gate: 1", qos=0)
               
         self.state = "plate"
     
@@ -344,7 +336,6 @@ class Program:
                 "img2base64": self.img2base64,
                 "chars": self.chars,
                 "validation": self.validation,
-                "idle": self.idle,
                 "decode": self.decode,
                 "send_msg": self.send_msg,
                 "action_open": self.action_open,

@@ -37,12 +37,14 @@ def load_config(filename):
     return config
 
 # neural network functions
-def load_net_model(model_path, element):
+def load_net_model(obj, model_path, element):
     try:
         model = tf.load(model_path, load_to_fb=uos.stat(model_path)[6] > (gc.mem_free() - (64*1024)))
         return model
     except Exception as e:
-        raise Exception(f'Failed to load {element}: {e}\n')
+        dprint(f"Error: {element} failed to load. Exception: {e}")
+        obj.state = "exit"
+        return None
 
 def load_label(label_path, element):
     try:
