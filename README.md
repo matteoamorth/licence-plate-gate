@@ -88,9 +88,11 @@ In the offline mode, plate detection, characters recognition, record evaluation 
 
 **Key features**
 ➕ Configure a single device without a server.
+
 ➕ Connection is not requested.
 
 ➖ Higher hardware specs required.
+
 ➖ Database not accessible.
 
 This flow can be selected setting the field `MODE = 0`;
@@ -101,9 +103,11 @@ In simple database, plate detection and characters recognition are performed on 
 
 **Key features**
 ➕ Database easily updatable.
+
 ➕ Perform actions with remote commands.
 
 ➖ Two devices required.
+
 ➖ Server has very poor tasks.
 
 This flow can be selected setting the field `MODE = 1`;
@@ -114,9 +118,11 @@ In the balanced configuration, plate detection is performed on board, while char
 
 **Key features**
 ➕ Better tasks and resources organization.
+
 ➕ Edge-device filters data for server, acting as a fog-device.
 
 ➖ Both devices need good specs to work correctly.
+
 ➖ The total evaluation time might increase.
 
 #### 4. Lightweight camera
@@ -125,9 +131,11 @@ On lightweight camera, image acquisition is the only task installed on the board
 
 **Key features**
 ➕ Low specs required for edge-device.
+
 ➕ Server can deliver results faster.
 
 ➖ Edge-device can't filter the images acquired.
+
 ➖ Connection must have large bandwidth.
 
 ### 🛜 Connection (only online version)
