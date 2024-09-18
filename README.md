@@ -128,6 +128,8 @@ In the balanced configuration, plate detection is performed on board, while char
 
 ➖ The total evaluation time might increase.
 
+This flow can be selected setting the field `MODE = 2`;
+
 #### 4. Lightweight camera
 
 On lightweight camera, image acquisition is the only task installed on the board, all the other operations are performed on the connected server.
@@ -141,6 +143,8 @@ On lightweight camera, image acquisition is the only task installed on the board
 ➖ Edge-device can't filter the images acquired.
 
 ➖ Connection must have large bandwidth.
+s
+This flow can be selected setting the field `MODE = 1`;
 
 ### 🛜 Connection (only online version)
 

@@ -20,10 +20,14 @@ import keras_ocr
 from inference_sdk import InferenceHTTPClient
 
 # influxDB 
-from influxdb_client import InfluxDBClient, Point, WriteOptions
+from influxdb_client import InfluxDBClient, Point, WriteOptions, rest
 
 # mqtt
 import paho.mqtt.client as mqtt
+
+# debug
+import logging
+import colorlog
 
 
 #   _                     _             _   _   _                 
@@ -41,10 +45,39 @@ CHARS_MODE   = 2
 CAMERA_MODE  = 3
 DEBUG = True
 
-# Macros
-dprint = print if DEBUG else lambda *args, **kwargs: None
+# Log
+logger = logging.getLogger('LPG-Server')
+logger.setLevel(logging.DEBUG)
 
-dprint('######################################################################\n\nPlate recognition server\n\n######################################################################\n')
+# File
+file_formatter = logging.Formatter('%(asctime)s [%(levelname)s] - %(message)s')
+file_handler = logging.FileHandler('plate_recognition_server.log')
+file_handler.setFormatter(file_formatter)
+file_handler.setLevel(logging.DEBUG)
+logger.addHandler(file_handler)
+
+# Console
+console_formatter = colorlog.ColoredFormatter('%(log_color)s%(asctime)s [%(levelname)s] - %(name)s - %(message)s',
+    log_colors={
+        'DEBUG': 'white',
+        'INFO': 'green',
+        'WARNING': 'yellow',
+        'ERROR': 'red',
+        'CRITICAL': 'bold_red',
+    }
+)
+
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(console_formatter)
+console_handler.setLevel(logging.DEBUG)
+logger.addHandler(console_handler)
+
+
+
+# Old debug
+#dprint = print if DEBUG else lambda *args, **kwargs: None
+
+logger.info('\n######################################################################\n\nPlate recognition server\n\n######################################################################\n')
 #pipeline = keras_ocr.pipeline.Pipeline()
 
 
@@ -65,7 +98,7 @@ class Program:
     
     def __init__(self):
          
-        dprint('Setting up server...\n')
+        logger.info('Server init ...')
         
         self.state = 'idle'
         self.msg_payload = None
@@ -81,62 +114,160 @@ class Program:
         self.DEVICE_ID = config['Settings']['DEVICE_ID']
         self.CLIENT_ID = config['Settings']['CLIENT_ID'] ## make it an array
         
+        self.DEVICE_ID= 'server_01'
+        logger.info('DEVICE ID: ' + str(self.DEVICE_ID))
         
         # model 
+        logger.debug('Loading Roboflow model')
         self.MODEL_ID = config['Roboflow']['MODEL_ID']
         self.robo_client =  InferenceHTTPClient(
             api_url = config['Roboflow']['API_URL'],
             api_key = config['Roboflow']['API_KEY'])
         
-        # influx 
-        self.influx_client = InfluxDBClient(url=config['InfluxDB']['INFLUXDB_URL'], token=config['InfluxDB']['INFLUXDB_TOKEN'])
-        self.write_api = self.influx_client.write_api(write_options=WriteOptions(batch_size=500, 
-                                                                                 flush_interval=10_000, 
-                                                                                 jitter_interval=2_000, 
-                                                                                 retry_interval=5_000))
-        self.influx_org = config['InfluxDB']['INFLUXDB_ORG']
-        self.influx_bucket = config['InfluxDB']['INFLUXDB_BUCKET']
+        # database 
+        self.influxdb_setup(config)
         
-        # mqtt
+        # connection
+        self.MQTT_setup(config)
+        
+    """
+    #   _____        __ _            _____  ____             _                 
+    #  |_   _|      / _| |          |  __ \|  _ \           | |                
+    #    | |  _ __ | |_| |_   ___  _| |  | | |_) |  ___  ___| |_ _   _ _ __    
+    #    | | | '_ \|  _| | | | \ \/ / |  | |  _ <  / __|/ _ \ __| | | | '_ \   
+    #   _| |_| | | | | | | |_| |>  <| |__| | |_) | \__ \  __/ |_| |_| | |_) |  
+    #  |_____|_| |_|_| |_|\__,_/_/\_\_____/|____/  |___/\___|\__|\__,_| .__/   
+    #                                                                 | |      
+    #                                                                 |_|      
+    """
+        
+        
+    # influx
+    def influxdb_setup(self,config): 
+        try:
+            logger.debug('Loading InfluxDB')
+            self.influx_client = InfluxDBClient(url=config['InfluxDB']['INFLUXDB_URL'], 
+                                                token=config['InfluxDB']['INFLUXDB_TOKEN'],
+                                                org=config['InfluxDB']['INFLUXDB_ORG'])
+            
+            self.influx_write_api = self.influx_client.write_api(write_options=WriteOptions(batch_size=500, 
+                                                                                    flush_interval=10_000, 
+                                                                                    jitter_interval=2_000, 
+                                                                                    retry_interval=5_000))
+            
+            self.influx_query_api = self.influx_client.query_api()
+            t_query = 'buckets()'
+            
+            result = self.influx_query_api.query(query=t_query)
+            
+            for table in result:
+                for record in table.records:
+                    logger.debug(f"Bucket avaiable: {record.values.get('name')}")
+
+        except rest.ApiException as e:
+            logger.error(f"Connection error to InfluxDB: {e}")
+            self.state = "exit"
+            return
+        
+        except Exception as e:
+            logger.error(f"Error: {e}")
+            self.state = "exit"
+            return
+        
+        self.influx_org = config['InfluxDB']['INFLUXDB_ORG']
+        self.influx_bucket = config['InfluxDB']['INFLUXDB_BUCKET'] 
+
+    """
+    #   __  __  ____ _______ _______            _               
+    #  |  \/  |/ __ \__   __|__   __|          | |              
+    #  | \  / | |  | | | |     | |     ___  ___| |_ _   _ _ __  
+    #  | |\/| | |  | | | |     | |    / __|/ _ \ __| | | | '_ \ 
+    #  | |  | | |__| | | |     | |    \__ \  __/ |_| |_| | |_) |
+    #  |_|  |_|\___\_\ |_|     |_|    |___/\___|\__|\__,_| .__/ 
+    #                                                    | |    
+    #                                                    |_|    
+    """
+    
+    # MQTT 
+    def MQTT_setup(self,config):
+        logger.debug('Loading MQTT')
         self.mqtt_client = mqtt.Client()
         self.mqtt_client.username_pw_set(config['MQTT Settings']['USER'], config['MQTT Settings']['PASSWORD'])
-        self.mqtt_client.on_message = self.on_message
-        self.mqtt_client.connect(config['MQTT Settings']['BROKER'], int(config['MQTT Settings']['PORT']), 60)
-        self.mqtt_client.subscribe(config['MQTT Topics']['TOPIC_SUBSCRIBE'])
         
-        self.mqtt_sub = config['MQTT Topics']['TOPIC_SUBSCRIBE']
-        self.mqtt_targ = config['MQTT Topics']['TOPIC_TARGET']
-        self.mqtt_dbg = config['MQTT Topics']['TOPIC_DEBUG']
+        self.mqtt_client.on_message = self.on_message
+        self.mqtt_client.on_connect = self.on_connect_MQTT
+        
+        self.mqtt_sub = str(config['MQTT Topics']['TOPIC_SUBSCRIBE'])
+        self.mqtt_targ = str(config['MQTT Topics']['TOPIC_TARGET'])
+        self.mqtt_dbg = str(config['MQTT Topics']['TOPIC_DEBUG'])
+        
+
+        try:
+            self.mqtt_client.connect(config['MQTT Settings']['BROKER'], int(config['MQTT Settings']['PORT']), 60)
+        except Exception as e:
+            logger.error(f'Connection to MQTT broker failed: {e}')
+            return
+        
+        
+        try:
+            self.mqtt_client.subscribe(config['MQTT Topics']['TOPIC_SUBSCRIBE'])
+            logger.debug(f"Sucessufully connected to topic: {config['MQTT Topics']['TOPIC_SUBSCRIBE']}")
+        except ValueError as e:
+            logger.error(f"Subscription with MQTT topic failed: {e}")
+            return
         
         self.mqtt_client.loop_start()
-
-        ### end of __init__ ###
-    
-    
-    def idle(self):
-        dprint('Server is idle, waiting for messages...')
         
+        
+        
+    
+    def on_connect_MQTT(self, clinet, userdata, flags, rc):
+
+        if rc != mqtt.MQTT_ERR_SUCCESS:
+            self.state = "exit"
+            logger.error(f"Message not sent: {msg.rc}")
+            return
+            
+        logger.info('MQTT broker connected')
+        msg = str(self.DEVICE_ID) + ": handshake connection"
+        rc = self.send_msg(self.mqtt_dbg, msg)
+        
+        
+        if rc != mqtt.MQTT_ERR_SUCCESS:
+            self.state = "exit"
+            logger.error(f"Message not sent: {msg.rc}")
+            return
+        
+        logger.debug("published message to MQTT broker")
+        
+       
+    def idle(self):
+        
+        #logger.debug('Server is idle, waiting for messages...')
+        self.state = "idle"
         ### end of idle ###
     
-    
-    #    _____      _ _ _                _    
-    #   / ____|    | | | |              | |   
-    #  | |     __ _| | | |__   __ _  ___| | __
-    #  | |    / _` | | | '_ \ / _` |/ __| |/ /
-    #  | |___| (_| | | | |_) | (_| | (__|   < 
-    #   \_____\__,_|_|_|_.__/ \__,_|\___|_|\_\                               
+    """
+    #    _____                            _   _               _               _                                      
+    #   / ____|                          | | (_)             | |             (_)                                     
+    #  | |     ___  _ __  _ __   ___  ___| |_ _  ___  _ __   | |__   __ _ ___ _  ___ ___                             
+    #  | |    / _ \| '_ \| '_ \ / _ \/ __| __| |/ _ \| '_ \  | '_ \ / _` / __| |/ __/ __|                            
+    #  | |___| (_) | | | | | | |  __/ (__| |_| | (_) | | | | | |_) | (_| \__ \ | (__\__ \                            
+    #   \_____\___/|_| |_|_| |_|\___|\___|\__|_|\___/|_| |_| |_.__/ \__,_|___/_|\___|___/                            
+    """                                                                                                            
+                                                                                                                   
     
     def on_message(self, mqtt_client, userdata, msg):
-        dprint('Reading incoming message...')
+        logger.info('Reading incoming MQTT message...')
         
         try:
             msg_dict = json.loads(msg.payload)
-            dprint('Received message: {msg_dict}')
+            logger.debug(f'Received message: {msg_dict}')
             client_id = msg_dict.get('device_id')
             self.client_mode = msg_dict.get('mode')
             
             if self.CLIENT_ID not in client_id:
-                dprint('No record match')
+                logger.warning('No record match')
                 self.client_mode = None
                 return
             
@@ -144,18 +275,36 @@ class Program:
             self.msg_payload = msg_dict.get('msg')
             
             
-            if self.client_mode == CAMERA_MODE: self.state = 'plate_detection'; return
-            if self.client_mode == CHARS_MODE: self.state = 'chars_detection'; return
-            if self.client_mode == STRING_MODE: self.state = 'string_detection'; return
+            if self.client_mode == CAMERA_MODE: 
+                self.state = 'plate_detection' 
+                logger.debug(f"Plate detection mode")
+                return
+            if self.client_mode == CHARS_MODE: 
+                self.state = 'chars_detection'
+                logger.debug(f"Chars recognition mode")
+                return
+            if self.client_mode == STRING_MODE: 
+                self.state = 'string_detection'
+                logger.debug(f"String evaluation mode")
+                return
             else: 
-                dprint('Unknown mode {self.client_mode}') 
+                logger.warning('Unknown mode {self.client_mode}') 
                 self.state = 'idle'   
             
         except Exception as e:
-            dprint('Failed to process message: {e}')
+            logger.error(f'Failed to process message: {e}')
             self.state = 'idle'
         
-
+    def send_msg(self, topic_target, message):
+        msg = self.mqtt_client.publish(topic_target, message)
+        if msg.rc == mqtt.MQTT_ERR_SUCCESS:
+            logger.debug(f"Sent message to topic '{topic_target}': {message}")
+        else:
+            logger.warning(f"Message not sent: {msg.rc}")
+        
+        return msg.rc
+    
+    """
     #   _____                                                                _             
     #  |_   _|                                                              (_)            
     #    | |  _ __ ___   __ _  __ _  ___   _ __  _ __ ___   ___ ___  ___ ___ _ _ __   __ _ 
@@ -164,13 +313,13 @@ class Program:
     #  |_____|_| |_| |_|\__,_|\__, |\___| | .__/|_|  \___/ \___\___||___/___/_|_| |_|\__, |
     #                          __/ |      | |                                         __/ |
     #                         |___/       |_|                                        |___/ 
-
+    """
     def plate_detection(self):
-        dprint('Processing images...')
+        logger.info('Processing images...')
         self.img = self.base2image(self.msg_payload)
         
         if self.img is None:
-            dprint('No image decoded') 
+            logger.warning('No image decoded') 
             self.state = 'idle'
             self.mqtt_client.loop_start()
             return
@@ -178,7 +327,7 @@ class Program:
         result = self.robo_client.infer(self.img, model_id=self.MODEL_ID)
         
         if result is None:
-            dprint('No plate detected.')
+            logger.warning('No plate detected.')
             self.state = 'idle'
             self.mqtt_client.loop_start()
             return
@@ -187,14 +336,14 @@ class Program:
         best_plate = max(predictions, key=lambda p: p['confidence'])
         
         if self.prediction is None:
-            dprint('New plate detected.')
+            logger.debug('New plate detected.')
             self.prediction = best_plate
             self.state = 'idle'
             self.mqtt_client.loop_start()
             return
 
         if self.prediction['width'] > best_plate['width']:
-            dprint('Car leaving ...')
+            logger.debug('Car leaving ...')
             self.prediction = None
             self.state = 'idle'
             self.mqtt_client.loop_start()
@@ -205,7 +354,7 @@ class Program:
         
     
     def img_crop(self):
-        dprint('Selecting the plate ...')
+        logger.debug('Selecting the plate ...')
         x = self.prediction['x']
         y = self.prediction['y']
         w = self.prediction['width']
@@ -218,19 +367,19 @@ class Program:
         
         self.img = self.img.crop((L, T, R, B))
         
-        dprint('Cropped image created')
+        logger.debug('Cropped image created')
         
         self.state = 'chars_detection'
      
         
     def chars_detection(self):
-        dprint('Processing plate...')
+        logger.debug('Processing plate...')
         
         if self.mode == CHARS_MODE:
             img = self.base2image(self.msg_payload)
             
             if img is None:
-                dprint('No image decoded'); 
+                logger.warning('No image decoded'); 
                 self.state = 'idle'
                 self.mqtt_client.loop_start()
                 return
@@ -253,7 +402,7 @@ class Program:
         recognized_text = ''.join([prediction[0] for prediction in sorted_predictions])
 
         
-        dprint(f"Recognized text: {recognized_text}")
+        logger.debug("Recognized text: {recognized_text}")
         self.msg_payload = recognized_text
         self.state = 'string_detection'
     
@@ -268,7 +417,7 @@ class Program:
                                                                               
     
     def string_detection(self):
-        dprint('Processing STRING_MODE...')
+        logger.info('Processing STRING_MODE...')
         
         query = 'from(bucket: "{self.influx_bucket}") |> ' \
                 'filter(fn: (r) => r["_measurement"] == "plates_registered" and ' \
@@ -277,46 +426,53 @@ class Program:
             result = self.influx_client.query_api().query(query=query, org=self.influx_org)
 
             if result:
-                dprint('Record "{self.msg_payload}" found in InfluxDB.')
+                logger.debug('Record "{self.msg_payload}" found in InfluxDB.')
                 self.store_access_record(self.msg_payload)
-                self.send_gate_open_message()
+                self.open_gate()
             else:
-                dprint('Record "{self.msg_payload}" not found in InfluxDB.')
+                logger.warning('Record "{self.msg_payload}" not found in InfluxDB.')
 
         except Exception as e:
-            dprint('Failed to query InfluxDB: {e}')
+            logger.error('Failed to query InfluxDB: {e}')
 
         self.mqtt_client.loop_start()
         self.state = "idle"
-        
-                                                
+                                                     
     def base2image(self, base64_string):
         img_data = base64.b64decode(base64_string)
         img_array = np.frombuffer(img_data, dtype=np.uint8)
         img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
         return img
-    
-    
+     
     def store_access_record(self, plate):
+        logger.debug('writing record on influx {plate}')
         point = Point("accesses").tag("plate_number", plate)
         self.write_api.write(self.influx_bucket, self.influx_org, point)
 
+    def open_gate(self):
+        msg = {
+            "device_id": self.DEVICE_ID,
+            "action": "gate_open"
+        }
+            
+        if self.send_msg(self.mqtt_targ, json.dumps(msg)) == mqtt.MQTT_ERR_SUCCESS:
+            logger.info('Sending opening gate..')
+        else:
+            logger.error("Can't open gate, quitting...")
+            self.state = "exit"
 
-    def send_gate_open_message(self):
-            msg = {
-                "device_id": self.DEVICE_ID,
-                "action": "gate_open"
-            }
-            self.mqtt_client.publish(self.mqtt_targ, json.dumps(msg))
-
-
+    def exit(self):
+        logger.info("Closing program")
+        self.state = 'null'
+        
     def run(self):
         state_functions = {
             'idle': self.idle,
             'plate_detection': self.plate_detection,
             'chars_detection': self.chars_detection,
             'string_detection': self.string_detection,
-            'img_crop': self.img_crop
+            'img_crop': self.img_crop,
+            'exit': self.exit
         }
 
         while True:
@@ -324,7 +480,7 @@ class Program:
             if state_function:
                 state_function()
             else:
-                dprint(f"Unknown state: {self.state}")
+                logger.error(f"Unknown state: {self.state}")
                 break
             
             
