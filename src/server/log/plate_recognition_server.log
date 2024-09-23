@@ -1,0 +1,1100 @@
+2024-09-16 22:42:46,669 [INFO] - LPG-Server - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-16 22:42:46,669 [INFO] - LPG-Server - Server init ...
+2024-09-16 22:42:46,670 [INFO] - LPG-Server - DEVICE ID: {self.DEVICE_ID}
+2024-09-16 22:42:46,670 [DEBUG] - LPG-Server - Loading Roboflow model
+2024-09-16 22:42:46,670 [DEBUG] - LPG-Server - Loading InfluxDB
+2024-09-16 22:42:46,684 [DEBUG] - LPG-Server - Loading MQTT
+2024-09-16 22:42:46,685 [DEBUG] - Rx - timeout: 9.99906
+2024-09-16 23:10:43,980 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-16 23:10:43,981 [INFO] - Server init ...
+2024-09-16 23:10:43,983 [INFO] - DEVICE ID: {self.DEVICE_ID}
+2024-09-16 23:10:43,983 [DEBUG] - Loading Roboflow model
+2024-09-16 23:10:43,984 [DEBUG] - Loading InfluxDB
+2024-09-16 23:10:44,000 [DEBUG] - Loading MQTT
+2024-09-16 23:12:32,093 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-16 23:12:32,094 [INFO] - Server init ...
+2024-09-16 23:12:32,096 [INFO] - DEVICE ID: {self.DEVICE_ID}
+2024-09-16 23:12:32,096 [DEBUG] - Loading Roboflow model
+2024-09-16 23:12:32,097 [DEBUG] - Loading InfluxDB
+2024-09-16 23:12:32,115 [DEBUG] - Loading MQTT
+2024-09-16 23:28:58,519 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-16 23:28:58,520 [INFO] - Server init ...
+2024-09-16 23:28:58,521 [INFO] - DEVICE ID: {self.DEVICE_ID}
+2024-09-16 23:28:58,521 [DEBUG] - Loading Roboflow model
+2024-09-16 23:28:58,521 [DEBUG] - Loading InfluxDB
+2024-09-16 23:28:58,533 [DEBUG] - Loading MQTT
+2024-09-16 23:30:20,803 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-16 23:30:20,804 [INFO] - Server init ...
+2024-09-16 23:30:20,806 [INFO] - DEVICE ID: server_1234
+2024-09-16 23:30:20,807 [DEBUG] - Loading Roboflow model
+2024-09-16 23:30:20,807 [DEBUG] - Loading InfluxDB
+2024-09-16 23:30:20,822 [DEBUG] - Loading MQTT
+2024-09-16 23:42:53,498 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-16 23:42:53,500 [INFO] - Server init ...
+2024-09-16 23:42:53,501 [INFO] - DEVICE ID: server_1234
+2024-09-16 23:42:53,501 [DEBUG] - Loading Roboflow model
+2024-09-16 23:42:53,501 [DEBUG] - Loading InfluxDB
+2024-09-16 23:42:53,517 [DEBUG] - Loading MQTT
+2024-09-16 23:42:53,519 [INFO] - MQTT broker connected
+2024-09-16 23:42:53,519 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-16 23:42:53,519 [DEBUG] - Server is idle, waiting for messages...
+2024-09-16 23:49:25,644 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-16 23:49:25,646 [INFO] - Server init ...
+2024-09-16 23:49:25,647 [INFO] - DEVICE ID: server_1234
+2024-09-16 23:49:25,647 [DEBUG] - Loading Roboflow model
+2024-09-16 23:49:25,648 [DEBUG] - Loading InfluxDB
+2024-09-16 23:49:25,664 [DEBUG] - Loading MQTT
+2024-09-16 23:49:25,667 [INFO] - MQTT broker connected
+2024-09-16 23:49:25,667 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-16 23:52:57,799 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-16 23:52:57,801 [INFO] - Server init ...
+2024-09-16 23:52:57,802 [INFO] - DEVICE ID: server_1234
+2024-09-16 23:52:57,802 [DEBUG] - Loading Roboflow model
+2024-09-16 23:52:57,802 [DEBUG] - Loading InfluxDB
+2024-09-16 23:52:57,815 [DEBUG] - Loading MQTT
+2024-09-16 23:52:57,817 [INFO] - MQTT broker connected
+2024-09-16 23:52:57,817 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-16 23:56:33,504 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-16 23:56:33,504 [INFO] - Server init ...
+2024-09-16 23:56:33,505 [INFO] - DEVICE ID: server_1234
+2024-09-16 23:56:33,506 [DEBUG] - Loading Roboflow model
+2024-09-16 23:56:33,506 [DEBUG] - Loading InfluxDB
+2024-09-16 23:56:33,519 [DEBUG] - Loading MQTT
+2024-09-16 23:56:33,521 [INFO] - MQTT broker connected
+2024-09-16 23:56:33,522 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-16 23:59:37,366 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-17 00:00:41,826 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-17 00:00:41,827 [INFO] - Server init ...
+2024-09-17 00:00:41,828 [INFO] - DEVICE ID: server_1234
+2024-09-17 00:00:41,829 [DEBUG] - Loading Roboflow model
+2024-09-17 00:00:41,829 [DEBUG] - Loading InfluxDB
+2024-09-17 00:00:41,846 [DEBUG] - Loading MQTT
+2024-09-17 00:00:41,848 [INFO] - MQTT broker connected
+2024-09-17 00:00:41,848 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-18 18:31:27,638 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 18:31:27,640 [INFO] - Server init ...
+2024-09-18 18:31:27,642 [INFO] - DEVICE ID: server_01
+2024-09-18 18:31:27,642 [DEBUG] - Loading Roboflow model
+2024-09-18 18:31:27,642 [DEBUG] - Loading InfluxDB
+2024-09-18 18:31:27,663 [DEBUG] - Loading MQTT
+2024-09-18 18:31:27,666 [INFO] - MQTT broker connected
+2024-09-18 18:31:27,666 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-18 18:34:02,678 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 18:34:02,679 [INFO] - Server init ...
+2024-09-18 18:34:02,679 [INFO] - DEVICE ID: server_01
+2024-09-18 18:34:02,680 [DEBUG] - Loading Roboflow model
+2024-09-18 18:34:02,680 [DEBUG] - Loading InfluxDB
+2024-09-18 18:34:02,695 [DEBUG] - Loading MQTT
+2024-09-18 18:34:02,697 [INFO] - MQTT broker connected
+2024-09-18 18:34:02,697 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-18 18:37:18,070 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 18:37:18,071 [INFO] - Server init ...
+2024-09-18 18:37:18,072 [INFO] - DEVICE ID: server_01
+2024-09-18 18:37:18,072 [DEBUG] - Loading Roboflow model
+2024-09-18 18:37:18,073 [DEBUG] - Loading InfluxDB
+2024-09-18 18:37:18,085 [DEBUG] - Loading MQTT
+2024-09-18 18:37:18,086 [INFO] - MQTT broker connected
+2024-09-18 18:37:18,086 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-18 21:34:01,857 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:34:01,858 [INFO] - Server init ...
+2024-09-18 21:34:01,861 [INFO] - DEVICE ID: server_01
+2024-09-18 21:34:01,861 [DEBUG] - Loading Roboflow model
+2024-09-18 21:34:01,861 [DEBUG] - Loading InfluxDB
+2024-09-18 21:34:01,875 [DEBUG] - Loading MQTT
+2024-09-18 21:34:01,876 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-18 21:35:54,499 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:35:54,501 [INFO] - Server init ...
+2024-09-18 21:35:54,502 [INFO] - DEVICE ID: server_01
+2024-09-18 21:35:54,503 [DEBUG] - Loading Roboflow model
+2024-09-18 21:35:54,503 [DEBUG] - Loading InfluxDB
+2024-09-18 21:35:54,518 [DEBUG] - Loading MQTT
+2024-09-18 21:35:54,520 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-18 21:39:15,700 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:39:15,701 [INFO] - Server init ...
+2024-09-18 21:39:15,702 [INFO] - DEVICE ID: server_01
+2024-09-18 21:39:15,702 [DEBUG] - Loading Roboflow model
+2024-09-18 21:39:15,703 [DEBUG] - Loading InfluxDB
+2024-09-18 21:39:15,717 [DEBUG] - Loading MQTT
+2024-09-18 21:39:15,720 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-18 21:40:17,428 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:40:17,429 [INFO] - Server init ...
+2024-09-18 21:40:17,430 [INFO] - DEVICE ID: server_01
+2024-09-18 21:40:17,430 [DEBUG] - Loading Roboflow model
+2024-09-18 21:40:17,431 [DEBUG] - Loading InfluxDB
+2024-09-18 21:40:17,445 [DEBUG] - Loading MQTT
+2024-09-18 21:40:17,448 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-18 21:42:02,318 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:42:02,319 [INFO] - Server init ...
+2024-09-18 21:42:02,321 [INFO] - DEVICE ID: server_01
+2024-09-18 21:42:02,321 [DEBUG] - Loading Roboflow model
+2024-09-18 21:42:02,322 [DEBUG] - Loading InfluxDB
+2024-09-18 21:42:02,336 [DEBUG] - Loading MQTT
+2024-09-18 21:42:02,338 [ERROR] - Subscription with MQTT topic failed: Invalid subscription filter.
+2024-09-18 21:42:52,290 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:42:52,291 [INFO] - Server init ...
+2024-09-18 21:42:52,292 [INFO] - DEVICE ID: server_01
+2024-09-18 21:42:52,293 [DEBUG] - Loading Roboflow model
+2024-09-18 21:42:52,293 [DEBUG] - Loading InfluxDB
+2024-09-18 21:42:52,303 [DEBUG] - Loading MQTT
+2024-09-18 21:42:52,312 [INFO] - MQTT broker connected
+2024-09-18 21:45:21,376 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:45:21,378 [INFO] - Server init ...
+2024-09-18 21:45:21,379 [INFO] - DEVICE ID: server_01
+2024-09-18 21:45:21,380 [DEBUG] - Loading Roboflow model
+2024-09-18 21:45:21,380 [DEBUG] - Loading InfluxDB
+2024-09-18 21:45:21,396 [DEBUG] - Loading MQTT
+2024-09-18 21:45:21,399 [INFO] - MQTT broker connected
+2024-09-18 21:48:12,353 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:48:12,354 [INFO] - Server init ...
+2024-09-18 21:48:12,355 [INFO] - DEVICE ID: server_01
+2024-09-18 21:48:12,355 [DEBUG] - Loading Roboflow model
+2024-09-18 21:48:12,356 [DEBUG] - Loading InfluxDB
+2024-09-18 21:48:12,370 [DEBUG] - Loading MQTT
+2024-09-18 21:48:12,384 [INFO] - MQTT broker connected
+2024-09-18 21:48:12,397 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-18 21:48:12,403 [DEBUG] - published message to MQTT broker
+2024-09-18 21:51:58,203 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:51:58,205 [INFO] - Server init ...
+2024-09-18 21:51:58,206 [INFO] - DEVICE ID: server_01
+2024-09-18 21:51:58,206 [DEBUG] - Loading Roboflow model
+2024-09-18 21:51:58,206 [DEBUG] - Loading InfluxDB
+2024-09-18 21:51:58,220 [DEBUG] - Loading MQTT
+2024-09-18 21:51:58,224 [INFO] - MQTT broker connected
+2024-09-18 21:55:35,821 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:55:35,823 [INFO] - Server init ...
+2024-09-18 21:55:35,824 [INFO] - DEVICE ID: server_01
+2024-09-18 21:55:35,825 [DEBUG] - Loading Roboflow model
+2024-09-18 21:55:35,826 [DEBUG] - Loading InfluxDB
+2024-09-18 21:55:35,844 [DEBUG] - Loading MQTT
+2024-09-18 21:55:35,854 [INFO] - MQTT broker connected
+2024-09-18 21:58:31,835 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 21:58:31,836 [INFO] - Server init ...
+2024-09-18 21:58:31,837 [INFO] - DEVICE ID: server_01
+2024-09-18 21:58:31,837 [DEBUG] - Loading Roboflow model
+2024-09-18 21:58:31,837 [DEBUG] - Loading InfluxDB
+2024-09-18 21:58:31,847 [DEBUG] - Loading MQTT
+2024-09-18 21:58:31,861 [INFO] - MQTT broker connected
+2024-09-18 21:58:31,880 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-18 21:58:31,886 [DEBUG] - published message to MQTT broker
+2024-09-18 22:39:47,907 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 22:39:47,908 [INFO] - Server init ...
+2024-09-18 22:39:47,909 [INFO] - DEVICE ID: server_01
+2024-09-18 22:39:47,909 [DEBUG] - Loading Roboflow model
+2024-09-18 22:39:47,909 [DEBUG] - Loading InfluxDB
+2024-09-18 22:39:47,922 [DEBUG] - Loading MQTT
+2024-09-18 22:39:47,949 [INFO] - MQTT broker connected
+2024-09-18 22:39:47,950 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-18 22:39:47,955 [DEBUG] - published message to MQTT broker
+2024-09-18 22:40:32,872 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 22:40:32,873 [INFO] - Server init ...
+2024-09-18 22:40:32,875 [INFO] - DEVICE ID: server_01
+2024-09-18 22:40:32,875 [DEBUG] - Loading Roboflow model
+2024-09-18 22:40:32,875 [DEBUG] - Loading InfluxDB
+2024-09-18 22:40:32,887 [DEBUG] - Loading MQTT
+2024-09-18 22:40:32,889 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-18 22:40:32,900 [INFO] - MQTT broker connected
+2024-09-18 22:40:32,917 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-18 22:40:32,917 [DEBUG] - published message to MQTT broker
+2024-09-18 22:41:08,438 [INFO] - Reading incoming MQTT message...
+2024-09-18 22:41:08,439 [ERROR] - Failed to process message: {e}
+2024-09-18 22:42:33,965 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 22:42:33,968 [INFO] - Server init ...
+2024-09-18 22:42:33,969 [INFO] - DEVICE ID: server_01
+2024-09-18 22:42:33,970 [DEBUG] - Loading Roboflow model
+2024-09-18 22:42:33,971 [DEBUG] - Loading InfluxDB
+2024-09-18 22:42:33,991 [DEBUG] - Loading MQTT
+2024-09-18 22:42:33,993 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-18 22:42:34,000 [INFO] - MQTT broker connected
+2024-09-18 22:42:34,012 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-18 22:42:34,026 [DEBUG] - published message to MQTT broker
+2024-09-18 22:42:44,415 [INFO] - Reading incoming MQTT message...
+2024-09-18 22:42:44,421 [ERROR] - Failed to process message: Expecting value: line 1 column 1 (char 0)
+2024-09-18 22:45:20,849 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 22:45:20,850 [INFO] - Server init ...
+2024-09-18 22:45:20,851 [INFO] - DEVICE ID: server_01
+2024-09-18 22:45:20,851 [DEBUG] - Loading Roboflow model
+2024-09-18 22:45:20,852 [DEBUG] - Loading InfluxDB
+2024-09-18 22:45:20,868 [DEBUG] - Loading MQTT
+2024-09-18 22:45:20,870 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-18 22:45:20,876 [INFO] - MQTT broker connected
+2024-09-18 22:45:20,883 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-18 22:45:20,883 [DEBUG] - published message to MQTT broker
+2024-09-18 22:45:54,051 [INFO] - Reading incoming MQTT message...
+2024-09-18 22:45:54,051 [DEBUG] - Received message: {'device_id': 'edge_device_1234', 'mode': '1'}
+2024-09-18 22:45:54,051 [WARNING] - Unknown mode {self.client_mode}
+2024-09-18 22:46:46,197 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 22:46:46,198 [INFO] - Server init ...
+2024-09-18 22:46:46,199 [INFO] - DEVICE ID: server_01
+2024-09-18 22:46:46,200 [DEBUG] - Loading Roboflow model
+2024-09-18 22:46:46,200 [DEBUG] - Loading InfluxDB
+2024-09-18 22:46:46,212 [DEBUG] - Loading MQTT
+2024-09-18 22:46:46,214 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-18 22:46:46,228 [INFO] - MQTT broker connected
+2024-09-18 22:46:46,240 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-18 22:46:46,246 [DEBUG] - published message to MQTT broker
+2024-09-18 22:46:55,968 [INFO] - Reading incoming MQTT message...
+2024-09-18 22:46:55,979 [DEBUG] - Received message: {'device_id': 'edge_device_1234', 'mode': 1}
+2024-09-18 22:51:17,719 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 22:51:17,722 [INFO] - Server init ...
+2024-09-18 22:51:17,723 [INFO] - DEVICE ID: server_01
+2024-09-18 22:51:17,724 [DEBUG] - Loading Roboflow model
+2024-09-18 22:51:17,724 [DEBUG] - Loading InfluxDB
+2024-09-18 22:51:17,739 [DEBUG] - Loading MQTT
+2024-09-18 22:51:17,742 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-18 22:51:17,743 [INFO] - MQTT broker connected
+2024-09-18 22:51:17,753 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-18 22:51:17,760 [DEBUG] - published message to MQTT broker
+2024-09-18 22:51:29,020 [INFO] - Reading incoming MQTT message...
+2024-09-18 22:51:29,027 [DEBUG] - Received message: {'device_id': 'edge_device_1234', 'mode': 1}
+2024-09-18 22:51:29,033 [DEBUG] - String evaluation mode
+2024-09-18 22:51:29,033 [INFO] - Processing STRING_MODE...
+2024-09-18 22:51:29,037 [ERROR] - Failed to query InfluxDB: {e}
+2024-09-18 22:51:37,223 [INFO] - Reading incoming MQTT message...
+2024-09-18 22:51:37,235 [DEBUG] - Received message: {'device_id': 'edge_device_1234', 'mode': 1}
+2024-09-18 22:51:37,240 [DEBUG] - String evaluation mode
+2024-09-18 22:51:37,240 [INFO] - Processing STRING_MODE...
+2024-09-18 22:51:37,242 [ERROR] - Failed to query InfluxDB: {e}
+2024-09-18 22:52:40,640 [INFO] - Reading incoming MQTT message...
+2024-09-18 22:52:40,653 [DEBUG] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'FY135CR'}
+2024-09-18 22:52:40,665 [DEBUG] - String evaluation mode
+2024-09-18 23:46:04,100 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 23:46:04,102 [INFO] - Server init ...
+2024-09-18 23:46:04,104 [INFO] - DEVICE ID: server_01
+2024-09-18 23:46:04,105 [DEBUG] - Loading Roboflow model
+2024-09-18 23:58:47,186 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-18 23:58:47,187 [INFO] - Server init ...
+2024-09-18 23:58:47,188 [INFO] - DEVICE ID: server_01
+2024-09-18 23:58:47,189 [DEBUG] - Loading Roboflow model
+2024-09-18 23:58:47,189 [DEBUG] - Loading InfluxDB
+2024-09-18 23:58:47,206 [ERROR] - Connection error to InfluxDB: (401)
+Reason: Unauthorized
+HTTP response headers: HTTPHeaderDict({'Content-Type': 'application/json; charset=utf-8', 'X-Influxdb-Build': 'OSS', 'X-Influxdb-Version': '2.7.6', 'X-Platform-Error-Code': 'unauthorized', 'Date': 'Wed, 18 Sep 2024 21:58:47 GMT', 'Content-Length': '55'})
+HTTP response body: b'{"code":"unauthorized","message":"unauthorized access"}'
+
+2024-09-18 23:58:47,206 [DEBUG] - Loading MQTT
+2024-09-18 23:58:47,208 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-18 23:58:47,208 [INFO] - Closing program
+2024-09-18 23:58:47,209 [ERROR] - Unknown state: null
+2024-09-18 23:58:47,211 [INFO] - MQTT broker connected
+2024-09-18 23:58:47,211 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-18 23:58:47,212 [DEBUG] - published message to MQTT broker
+2024-09-19 00:01:06,147 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-19 00:01:06,148 [INFO] - Server init ...
+2024-09-19 00:01:06,149 [INFO] - DEVICE ID: server_01
+2024-09-19 00:01:06,150 [DEBUG] - Loading Roboflow model
+2024-09-19 00:01:06,150 [DEBUG] - Loading InfluxDB
+2024-09-19 00:01:06,172 [DEBUG] - Bucket: _monitoring
+2024-09-19 00:01:06,173 [DEBUG] - Bucket: _tasks
+2024-09-19 00:01:06,173 [DEBUG] - Bucket: iot_lab
+2024-09-19 00:01:06,173 [DEBUG] - Bucket: iot_project
+2024-09-19 00:01:06,173 [DEBUG] - Bucket: prova_bucket
+2024-09-19 00:01:06,174 [DEBUG] - Loading MQTT
+2024-09-19 00:01:06,175 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-19 00:01:06,176 [INFO] - MQTT broker connected
+2024-09-19 00:01:06,183 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-19 00:01:06,183 [DEBUG] - published message to MQTT broker
+2024-09-19 00:05:31,456 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-19 00:05:31,458 [INFO] - Server init ...
+2024-09-19 00:05:31,459 [INFO] - DEVICE ID: server_01
+2024-09-19 00:05:31,459 [DEBUG] - Loading Roboflow model
+2024-09-19 00:05:31,459 [DEBUG] - Loading InfluxDB
+2024-09-19 00:05:31,483 [DEBUG] - Bucket avaiable: _monitoring
+2024-09-19 00:05:31,483 [DEBUG] - Bucket avaiable: _tasks
+2024-09-19 00:05:31,483 [DEBUG] - Bucket avaiable: iot_lab
+2024-09-19 00:05:31,483 [DEBUG] - Bucket avaiable: iot_project
+2024-09-19 00:05:31,483 [DEBUG] - Bucket avaiable: prova_bucket
+2024-09-19 00:05:31,484 [DEBUG] - Loading MQTT
+2024-09-19 00:05:31,485 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-19 00:05:31,497 [INFO] - MQTT broker connected
+2024-09-19 00:05:31,503 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-19 00:05:31,515 [DEBUG] - published message to MQTT broker
+2024-09-19 00:13:53,382 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-19 00:13:53,383 [INFO] - Server init ...
+2024-09-19 00:13:53,385 [INFO] - DEVICE ID: server_01
+2024-09-19 00:13:53,385 [DEBUG] - Loading Roboflow model
+2024-09-19 00:13:53,386 [DEBUG] - Loading InfluxDB
+2024-09-19 00:13:53,417 [DEBUG] - Bucket avaiable: _monitoring
+2024-09-19 00:13:53,417 [DEBUG] - Bucket avaiable: _tasks
+2024-09-19 00:13:53,417 [DEBUG] - Bucket avaiable: iot_lab
+2024-09-19 00:13:53,417 [DEBUG] - Bucket avaiable: iot_project
+2024-09-19 00:13:53,417 [DEBUG] - Bucket avaiable: prova_bucket
+2024-09-19 00:13:53,418 [DEBUG] - Loading MQTT
+2024-09-19 00:13:53,419 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-19 00:14:31,587 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-19 00:14:31,588 [INFO] - Server init ...
+2024-09-19 00:14:31,589 [INFO] - DEVICE ID: server_01
+2024-09-19 00:14:31,589 [DEBUG] - Loading Roboflow model
+2024-09-19 00:14:31,590 [DEBUG] - Loading InfluxDB
+2024-09-19 00:14:31,611 [DEBUG] - Bucket avaiable: _monitoring
+2024-09-19 00:14:31,611 [DEBUG] - Bucket avaiable: _tasks
+2024-09-19 00:14:31,611 [DEBUG] - Bucket avaiable: iot_lab
+2024-09-19 00:14:31,612 [DEBUG] - Bucket avaiable: iot_project
+2024-09-19 00:14:31,612 [DEBUG] - Bucket avaiable: prova_bucket
+2024-09-19 00:14:31,612 [DEBUG] - Loading MQTT
+2024-09-19 00:14:31,614 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-19 00:14:31,614 [INFO] - MQTT broker connected
+2024-09-19 00:14:31,627 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-19 00:14:31,632 [DEBUG] - published message to MQTT broker
+2024-09-21 12:59:39,160 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-21 12:59:39,162 [INFO] - Server init ...
+2024-09-21 12:59:39,162 [INFO] - DEVICE ID: server_01
+2024-09-21 12:59:39,163 [DEBUG] - Loading Roboflow model
+2024-09-21 12:59:39,163 [DEBUG] - Loading InfluxDB
+2024-09-21 12:59:39,166 [ERROR] - Error: __init__() got an unexpected keyword argument 'write_options'
+2024-09-21 12:59:39,166 [DEBUG] - Loading MQTT
+2024-09-21 12:59:39,169 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-21 12:59:39,170 [INFO] - Closing program
+2024-09-21 12:59:39,170 [ERROR] - Unknown state: null
+2024-09-21 13:00:20,995 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-21 13:00:20,996 [INFO] - Server init ...
+2024-09-21 13:00:20,997 [INFO] - DEVICE ID: server_01
+2024-09-21 13:00:20,997 [DEBUG] - Loading Roboflow model
+2024-09-21 13:00:20,997 [DEBUG] - Loading InfluxDB
+2024-09-21 13:00:21,000 [ERROR] - Error: __init__() got an unexpected keyword argument 'write_options'
+2024-09-21 13:00:21,000 [DEBUG] - Loading MQTT
+2024-09-21 13:00:21,003 [DEBUG] - Sucessufully connected to topic: test/cam_target
+2024-09-21 13:00:21,004 [INFO] - MQTT broker connected
+2024-09-21 13:00:21,004 [INFO] - Closing program
+2024-09-21 13:00:21,004 [DEBUG] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-21 13:00:21,004 [ERROR] - Unknown state: null
+2024-09-21 13:00:21,005 [DEBUG] - published message to MQTT broker
+2024-09-21 13:09:01,514 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-21 13:09:01,517 [INFO] - Server init ...
+2024-09-21 13:09:01,518 [INFO] - DEVICE ID: server_01
+2024-09-21 13:09:01,518 [DEBUG] - Loading Roboflow model
+2024-09-21 13:09:01,518 [DEBUG] - [InfluxDB] - Loading
+2024-09-21 13:09:01,521 [ERROR] - [InfluxDB] - Error: __init__() got an unexpected keyword argument 'write_options'
+2024-09-21 13:09:01,521 [DEBUG] - [MQTT] - Loading
+2024-09-21 13:09:01,523 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-21 13:09:01,524 [INFO] - [CORE] - Closing program
+2024-09-21 13:09:01,524 [ERROR] - Unknown state: null
+2024-09-21 13:09:01,524 [INFO] - [MQTT] - Broker connected
+2024-09-21 13:09:01,525 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-21 13:09:01,525 [DEBUG] - [MQTT] - published message to MQTT broker
+2024-09-21 13:09:33,032 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-21 13:09:33,034 [INFO] - Server init ...
+2024-09-21 13:09:33,034 [INFO] - DEVICE ID: server_01
+2024-09-21 13:09:33,035 [DEBUG] - Loading Roboflow model
+2024-09-21 13:09:33,035 [DEBUG] - [InfluxDB] - Loading
+2024-09-21 13:09:33,039 [ERROR] - [InfluxDB] - Error: __init__() got an unexpected keyword argument 'write_options'
+2024-09-21 13:09:33,039 [DEBUG] - [MQTT] - Loading
+2024-09-21 13:09:33,041 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-21 13:09:33,042 [INFO] - [MQTT] - Broker connected
+2024-09-21 13:09:33,043 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-21 13:09:33,043 [INFO] - [CORE] - Closing program
+2024-09-21 13:09:33,043 [DEBUG] - [MQTT] - published message to MQTT broker
+2024-09-21 13:09:33,043 [ERROR] - Unknown state: null
+2024-09-21 13:12:11,257 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-21 13:12:11,260 [INFO] - Server init ...
+2024-09-21 13:12:11,260 [INFO] - DEVICE ID: server_01
+2024-09-21 13:12:11,260 [DEBUG] - Loading Roboflow model
+2024-09-21 13:12:11,261 [DEBUG] - [InfluxDB] - Loading
+2024-09-21 13:12:11,263 [ERROR] - [InfluxDB] - Error: __init__() got an unexpected keyword argument 'write_options'
+2024-09-21 13:12:11,263 [DEBUG] - [MQTT] - Loading
+2024-09-21 13:12:11,266 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-21 13:12:11,267 [INFO] - [CORE] - Closing program
+2024-09-21 13:12:11,267 [ERROR] - Unknown state: null
+2024-09-21 13:12:11,268 [INFO] - [MQTT] - Broker connected
+2024-09-21 13:12:11,269 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-21 13:12:11,269 [DEBUG] - [MQTT] - published message to MQTT broker
+2024-09-21 13:25:00,189 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-21 13:25:00,194 [INFO] - Server init ...
+2024-09-21 13:25:00,195 [INFO] - DEVICE ID: server_01
+2024-09-21 13:25:00,195 [DEBUG] - Loading Roboflow model
+2024-09-21 13:25:00,195 [DEBUG] - [InfluxDB] - Loading
+2024-09-21 13:25:00,200 [ERROR] - [InfluxDB] - Error: __init__() got an unexpected keyword argument 'write_options'
+2024-09-21 13:25:00,200 [DEBUG] - [MQTT] - Loading
+2024-09-21 13:25:00,203 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-21 13:25:00,204 [INFO] - [MQTT] - Broker connected
+2024-09-21 13:25:00,205 [DEBUG] - Status at end of init: exit
+2024-09-21 13:25:00,205 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-21 13:25:00,205 [INFO] - [CORE] - Closing program
+2024-09-21 13:25:00,205 [DEBUG] - [MQTT] - published message to broker
+2024-09-21 13:25:00,206 [ERROR] - [CORE] Unknown state: null
+2024-09-23 17:54:58,220 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 17:54:58,222 [INFO] - Server init ...
+2024-09-23 17:54:58,223 [INFO] - DEVICE ID: server_01
+2024-09-23 17:54:58,223 [DEBUG] - Loading Roboflow model
+2024-09-23 17:54:58,224 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 17:54:58,231 [ERROR] - [InfluxDB] - Error: __init__() got an unexpected keyword argument 'write_options'
+2024-09-23 17:54:58,231 [DEBUG] - Status at end of init: exit
+2024-09-23 17:54:58,231 [DEBUG] - [MQTT] - Loading
+2024-09-23 17:54:58,243 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 17:54:58,245 [DEBUG] - Status at end of init: exit
+2024-09-23 17:54:58,245 [INFO] - [CORE] - Closing program
+2024-09-23 17:54:58,247 [ERROR] - [CORE] Unknown state: null
+2024-09-23 17:57:54,184 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 17:57:54,185 [INFO] - Server init ...
+2024-09-23 17:57:54,186 [INFO] - DEVICE ID: server_01
+2024-09-23 17:57:54,186 [DEBUG] - Loading Roboflow model
+2024-09-23 17:57:54,186 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 17:57:54,284 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 17:57:54,284 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 17:57:54,284 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 17:57:54,284 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 17:57:54,284 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 17:57:54,284 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 17:57:54,284 [DEBUG] - [MQTT] - Loading
+2024-09-23 17:57:54,285 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 17:57:54,301 [INFO] - [MQTT] - Broker connected
+2024-09-23 17:57:54,318 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 17:57:54,329 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:10:13,378 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:10:13,408 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'FY135CR'}
+2024-09-23 18:10:13,420 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:16:56,575 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:16:56,577 [INFO] - Server init ...
+2024-09-23 18:16:56,578 [INFO] - DEVICE ID: server_01
+2024-09-23 18:16:56,578 [DEBUG] - Loading Roboflow model
+2024-09-23 18:16:56,578 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:16:56,605 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:16:56,606 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:16:56,606 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:16:56,606 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:16:56,606 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:16:56,606 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:16:56,606 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:16:56,607 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:16:56,620 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:16:56,633 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:16:56,639 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:17:02,425 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:17:02,426 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:17:02,432 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:17:02,432 [INFO] - [CORE] - Processing STRING_MODE...
+2024-09-23 18:17:02,482 [ERROR] - [Influx] - Failed to query: {e}
+2024-09-23 18:17:53,968 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:17:53,969 [INFO] - Server init ...
+2024-09-23 18:17:53,969 [INFO] - DEVICE ID: server_01
+2024-09-23 18:17:53,970 [DEBUG] - Loading Roboflow model
+2024-09-23 18:17:53,970 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:17:53,983 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:17:53,983 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:17:53,984 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:17:53,984 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:17:53,985 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:17:53,985 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:17:53,985 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:17:53,986 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:17:53,993 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:17:54,007 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:17:54,013 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:18:04,040 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:18:04,052 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:18:04,064 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:18:04,065 [INFO] - [CORE] - Processing STRING_MODE...
+2024-09-23 18:18:04,071 [ERROR] - [Influx] - Failed to query: {e}
+2024-09-23 18:18:43,265 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:18:43,268 [INFO] - Server init ...
+2024-09-23 18:18:43,268 [INFO] - DEVICE ID: server_01
+2024-09-23 18:18:43,269 [DEBUG] - Loading Roboflow model
+2024-09-23 18:18:43,269 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:18:43,281 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:18:43,281 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:18:43,281 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:18:43,282 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:18:43,282 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:18:43,282 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:18:43,282 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:18:43,284 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:18:43,285 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:18:43,296 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:18:43,302 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:18:46,787 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:18:46,793 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:18:46,805 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:21:23,652 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:21:23,654 [INFO] - Server init ...
+2024-09-23 18:21:23,655 [INFO] - DEVICE ID: server_01
+2024-09-23 18:21:23,655 [DEBUG] - Loading Roboflow model
+2024-09-23 18:21:23,656 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:21:23,666 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:21:23,667 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:21:23,667 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:21:23,668 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:21:23,668 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:21:23,668 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:21:23,668 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:21:23,670 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:21:23,678 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:21:23,689 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:21:23,701 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:21:28,387 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:21:28,392 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:21:28,405 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:25:52,172 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:25:52,175 [INFO] - Server init ...
+2024-09-23 18:25:52,176 [INFO] - DEVICE ID: server_01
+2024-09-23 18:25:52,176 [DEBUG] - Loading Roboflow model
+2024-09-23 18:25:52,177 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:25:52,189 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:25:52,189 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:25:52,189 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:25:52,190 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:25:52,190 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:25:52,190 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:25:52,190 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:25:52,192 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:25:52,210 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:25:52,223 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:25:52,234 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:25:56,427 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:25:56,427 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:25:56,427 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:27:09,739 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:27:09,742 [INFO] - Server init ...
+2024-09-23 18:27:09,743 [INFO] - DEVICE ID: server_01
+2024-09-23 18:27:09,743 [DEBUG] - Loading Roboflow model
+2024-09-23 18:27:09,743 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:27:09,759 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:27:09,759 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:27:09,760 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:27:09,760 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:27:09,760 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:27:09,760 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:27:09,760 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:27:09,761 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:27:09,767 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:27:09,779 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:27:09,780 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:27:25,859 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:27:25,860 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:27:25,860 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:27:25,860 [INFO] - [CORE] - Processing STRING_MODE...
+2024-09-23 18:27:25,869 [ERROR] - [Influx] - Failed to query: (404)
+Reason: Not Found
+HTTP response headers: HTTPHeaderDict({'Content-Type': 'application/json; charset=utf-8', 'Vary': 'Accept-Encoding', 'X-Influxdb-Build': 'OSS', 'X-Influxdb-Version': '2.7.6', 'X-Platform-Error-Code': 'not found', 'Date': 'Mon, 23 Sep 2024 16:27:25 GMT', 'Transfer-Encoding': 'chunked'})
+HTTP response body: b'{"code":"not found","message":"failed to initialize execute state: could not find bucket \\"your_bucket\\""}'
+
+2024-09-23 18:30:04,885 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:30:04,888 [INFO] - Server init ...
+2024-09-23 18:30:04,889 [INFO] - DEVICE ID: server_01
+2024-09-23 18:30:04,889 [DEBUG] - Loading Roboflow model
+2024-09-23 18:30:04,889 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:30:04,901 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:30:04,901 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:30:04,901 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:30:04,901 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:30:04,901 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:30:04,901 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:30:04,902 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:30:04,903 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:30:04,920 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:30:04,921 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:30:04,933 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:30:15,458 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:30:15,470 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:30:15,476 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:30:15,476 [INFO] - [CORE] - Processing STRING_MODE...
+2024-09-23 18:30:15,484 [INFO] - [Influx] - Record "None" not found.
+2024-09-23 18:35:50,602 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:35:50,604 [INFO] - Server init ...
+2024-09-23 18:35:50,605 [INFO] - DEVICE ID: server_01
+2024-09-23 18:35:50,605 [DEBUG] - Loading Roboflow model
+2024-09-23 18:35:50,606 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:35:50,617 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:35:50,617 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:35:50,617 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:35:50,617 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:35:50,618 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:35:50,618 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:35:50,618 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:35:50,619 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:35:50,626 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:35:50,633 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:35:50,645 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:35:58,437 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:35:58,444 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:35:58,450 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:37:30,112 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:37:30,114 [INFO] - Server init ...
+2024-09-23 18:37:30,115 [INFO] - DEVICE ID: server_01
+2024-09-23 18:37:30,115 [DEBUG] - Loading Roboflow model
+2024-09-23 18:37:30,115 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:37:30,130 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:37:30,130 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:37:30,131 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:37:30,131 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:37:30,131 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:37:30,131 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:37:30,131 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:37:30,133 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:37:30,134 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:37:30,141 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:37:30,154 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:37:44,146 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:37:44,157 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:37:44,164 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:37:44,164 [INFO] - [CORE] - Processing STRING_MODE...
+2024-09-23 18:37:44,171 [INFO] - [Influx] - Record "None" not found.
+2024-09-23 18:37:44,171 [DEBUG] - [CORE] MQTT connection restarted
+2024-09-23 18:39:10,926 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:39:10,932 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:39:10,932 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:39:10,932 [INFO] - [CORE] - Processing STRING_MODE...
+2024-09-23 18:39:10,938 [INFO] - [Influx] - Record "None" not found.
+2024-09-23 18:39:10,938 [DEBUG] - [CORE] MQTT connection restarted
+2024-09-23 18:47:24,126 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:47:24,129 [INFO] - Server init ...
+2024-09-23 18:47:24,130 [INFO] - DEVICE ID: server_01
+2024-09-23 18:47:24,130 [DEBUG] - Loading Roboflow model
+2024-09-23 18:47:24,130 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:47:24,154 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:47:24,155 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:47:24,155 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:47:24,155 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:47:24,156 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:47:24,156 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:47:24,156 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:47:24,158 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:47:24,168 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:47:24,181 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:47:24,193 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:47:27,578 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:47:27,578 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:47:27,590 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:49:02,162 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:49:02,163 [INFO] - Server init ...
+2024-09-23 18:49:02,164 [INFO] - DEVICE ID: server_01
+2024-09-23 18:49:02,164 [DEBUG] - Loading Roboflow model
+2024-09-23 18:49:02,164 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:49:02,176 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:49:02,177 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:49:02,177 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:49:02,177 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:49:02,178 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:49:02,178 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:49:02,179 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:49:02,181 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:49:02,200 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:49:02,212 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:49:02,218 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:49:05,790 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:49:05,796 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:49:05,802 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:49:05,814 [DEBUG] - Check self state: idle
+2024-09-23 18:50:25,972 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:50:25,973 [INFO] - Server init ...
+2024-09-23 18:50:25,973 [INFO] - DEVICE ID: server_01
+2024-09-23 18:50:25,973 [DEBUG] - Loading Roboflow model
+2024-09-23 18:50:25,974 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:50:25,983 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:50:25,983 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:50:25,983 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:50:25,984 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:50:25,984 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:50:25,984 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:50:25,984 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:50:25,986 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:50:25,987 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:50:25,993 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:50:26,000 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:50:29,132 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:50:29,138 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:50:29,143 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:50:29,144 [DEBUG] - Check self state: string_detection
+2024-09-23 18:52:38,257 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 18:52:38,258 [INFO] - Server init ...
+2024-09-23 18:52:38,258 [INFO] - DEVICE ID: server_01
+2024-09-23 18:52:38,258 [DEBUG] - Loading Roboflow model
+2024-09-23 18:52:38,259 [DEBUG] - [InfluxDB] - Loading
+2024-09-23 18:52:38,268 [DEBUG] - [InfluxDB] - Bucket avaiable: _monitoring
+2024-09-23 18:52:38,268 [DEBUG] - [InfluxDB] - Bucket avaiable: _tasks
+2024-09-23 18:52:38,269 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_lab
+2024-09-23 18:52:38,269 [DEBUG] - [InfluxDB] - Bucket avaiable: iot_project
+2024-09-23 18:52:38,270 [DEBUG] - [InfluxDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 18:52:38,270 [DEBUG] - [InfluxDB] - Bucket avaiable: prova_bucket
+2024-09-23 18:52:38,270 [DEBUG] - [MQTT] - Loading
+2024-09-23 18:52:38,272 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 18:52:38,279 [INFO] - [MQTT] - Broker connected
+2024-09-23 18:52:38,286 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 18:52:38,287 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 18:52:56,022 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:52:56,022 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:52:56,022 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:52:56,022 [INFO] - [CORE] - Processing STRING_MODE...
+2024-09-23 18:52:56,022 [DEBUG] - Check self state: string_detection
+2024-09-23 18:52:56,029 [INFO] - [Influx] - Record "None" not found.
+2024-09-23 18:52:56,029 [DEBUG] - [CORE] MQTT connection restarted
+2024-09-23 18:53:08,907 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 18:53:08,908 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 18:53:08,908 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 18:53:08,908 [DEBUG] - Check self state: string_detection
+2024-09-23 21:01:12,541 [INFO] - 
+######################################################################
+
+Plate recognition server
+
+######################################################################
+
+2024-09-23 21:01:12,544 [INFO] - Server init ...
+2024-09-23 21:01:12,545 [INFO] - DEVICE ID: server_01
+2024-09-23 21:01:12,545 [DEBUG] - Loading Roboflow model
+2024-09-23 21:01:12,545 [DEBUG] - [INFLUXDB] - Loading
+2024-09-23 21:01:12,558 [DEBUG] - [INFLUXDB] - Bucket avaiable: _monitoring
+2024-09-23 21:01:12,558 [DEBUG] - [INFLUXDB] - Bucket avaiable: _tasks
+2024-09-23 21:01:12,559 [DEBUG] - [INFLUXDB] - Bucket avaiable: iot_lab
+2024-09-23 21:01:12,559 [DEBUG] - [INFLUXDB] - Bucket avaiable: iot_project
+2024-09-23 21:01:12,559 [DEBUG] - [INFLUXDB] - Bucket avaiable: my_infinite_retention_bucket
+2024-09-23 21:01:12,560 [DEBUG] - [INFLUXDB] - Bucket avaiable: prova_bucket
+2024-09-23 21:01:12,560 [DEBUG] - [MQTT] - Loading
+2024-09-23 21:01:12,561 [DEBUG] - [MQTT] - Sucessufully connected to topic: test/cam_target
+2024-09-23 21:01:12,583 [INFO] - [MQTT] - Broker connected
+2024-09-23 21:01:12,601 [DEBUG] - [MQTT] - Sent message to topic 'test/cam_debug': server_01: handshake connection
+2024-09-23 21:01:12,614 [DEBUG] - [MQTT] - published message to broker
+2024-09-23 21:01:20,236 [INFO] - [MQTT] - Reading incoming message...
+2024-09-23 21:01:20,236 [DEBUG] - [MQTT] - Received message: {'device_id': 'edge_device_1234', 'mode': 1, 'payload': 'AB123CD'}
+2024-09-23 21:01:20,236 [DEBUG] - [CORE] - String evaluation mode
+2024-09-23 21:01:20,236 [INFO] - [CORE] - Processing STRING_MODE...
+2024-09-23 21:01:20,246 [DEBUG] - [INFLUXDB] - Record "AB123CD" found.
+2024-09-23 21:01:20,246 [DEBUG] - [INFLUXDB] - Writing record: AB123CD
+2024-09-23 21:01:20,269 [INFO] - [INFLUXDB] - Plate "AB123CD" not authorized
+2024-09-23 21:01:20,270 [DEBUG] - [CORE] MQTT connection restarted

@@ -1,6 +1,0 @@
-#group,false,false,false,false
-#datatype,string,string,string,dateTime:RFC3339
-#default,plates_registered,,,
-measurement,device_id,plate_number,timestamp
-plates_registered,111,ABC123,2024-06-17T13:00:00Z
-plates_registered,111,XYZ789,2024-06-17T13:05:00Z
