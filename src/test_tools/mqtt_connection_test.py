@@ -13,7 +13,7 @@ def on_connect(client, userdata, flags, rc):
         else:
             print(f"Errore nell'invio del messaggio: {result.rc}")
         
-        # Sottoscrivi a un topic
+        # topic subscription
         topic_subscribe = 'cam_target'
         print(f"Sottoscrizione al topic: {topic_subscribe}")
         client.subscribe(topic_subscribe)
@@ -31,7 +31,7 @@ client.on_connect = on_connect
 client.on_message = on_message
 
 try:
-    # Connettiti al broker
+    # broker connection
     client.connect("localhost", 1883, 60)
     
     client.loop_forever()
