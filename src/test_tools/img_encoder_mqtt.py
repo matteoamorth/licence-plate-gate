@@ -31,10 +31,12 @@ topic_subscribe = "test/cam_target"
 client.on_connect = on_connect
 fragment_size = 16384 #8192 #4096 #1024 2048
 device_id = 'edge_device_123'
-mode = 2
+mode = 3
 
-with open("img/cropped_plate.jpg",'rb') as file:
+######################################################
+with open("img/plate.jpg",'rb') as file:
     filecontent = file.read()
+######################################################
 
 img = bytearray(filecontent)
 

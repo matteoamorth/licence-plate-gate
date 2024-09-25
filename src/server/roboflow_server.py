@@ -282,10 +282,12 @@ class Program:
                 if msg['mode'] == CAMERA_MODE:
                     self.state = 'plate_detection' 
                     log.debug(f"[CORE] - {self.state} mode")
+                    self.encoded_img = bytearray()
                     return
                 elif msg['mode'] == CHARS_MODE:
                     self.state = 'chars_detection'
                     log.debug(f"[CORE] - {self.state} mode")
+                    self.encoded_img = bytearray()
                     return
                 else:
                     self.state = 'idle'
@@ -332,6 +334,9 @@ class Program:
             log.info("[CORE] - Waiting for incoming messages")
             self.mqtt_client.loop_start()
             return
+        
+        self.msg_payload = Image.open(self.msg_payload)
+        
         
         result = self.robo_client.infer(self.msg_payload, model_id=self.MODEL_ID)
         
@@ -380,6 +385,13 @@ class Program:
         B = y + h / 2
         
         self.msg_payload = self.msg_payload.crop((L, T, R, B))
+        self.msg_payload.save("log/cropped_image.jpg")
+        
+        # set again img as bytearray
+        byte_arr = io.BytesIO() 
+        #self.msg_payload.save(byte_arr, format='JPEG')
+        byte_arr.seek(0) 
+        self.msg_payload = byte_arr
         
         log.debug('[CORE] - Cropped image created')
         
