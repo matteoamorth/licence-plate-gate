@@ -2,7 +2,7 @@
 
 ## Abstract
 
-This project implements a server for license plate recognition using a machine learning pipeline based on Keras OCR and the Roboflow service for image inference. The server receives images via MQTT, processes them to identify license plates, and stores the results in an InfluxDB database. Additionally, it includes a system to manage gate opening commands based on license plate recognition that will be sent to the actuator of the system.
+This project implements a server for license plate recognition using a machine learning pipeline based on Keras OCR and the Roboflow service for image inference. The server receives images via MQTT, processes them to identify license plates, and checks and stores the results in a InfluxDB database. Additionally, it includes a system to manage gate opening commands based on license plate recognition that will be sent to the actuator of the system.
 
 ## Table of Contents
 
@@ -10,9 +10,11 @@ This project implements a server for license plate recognition using a machine l
   - [Abstract](#abstract)
   - [Table of Contents](#table-of-contents)
   - [⚙️ Requirements](#️-requirements)
-  - [🚀 Installation](#-installation)
-    - [Upload files](#upload-files)
-      - [Run the server](#run-the-server)
+  - [🛠️ Installation](#️-installation)
+    - [🐍 Python script](#-python-script)
+    - [🛜 MQTT Broker](#-mqtt-broker)
+    - [💾 InfluxDB](#-influxdb)
+  - [🚀 Run the server](#-run-the-server)
 
 ---
 
@@ -21,65 +23,43 @@ This project implements a server for license plate recognition using a machine l
 - Python 3.8 or higher
 - External libraries:
   - `configparser`
-  - `json`
-  - `opencv-python`
-  - `Pillow`
-  - `numpy`
+  - `argparse`
+  - `pillow`
   - `keras_ocr`
   - `inference_sdk`
   - `influxdb-client`
   - `paho-mqtt`
+  - `colorlog`
+  - `tensorflow==2.15`
 
-## 🚀 Installation
+## 🛠️ Installation
 
 To install all necessary dependencies, follow these steps:
 
-1. **Create a virtual environment** (optional but recommended):
+### 🐍 Python script
+
+1. **Create a virtual environment** (optional):
 
   ``` bash
   python3 -m venv env
   source env/bin/activate  # On Windows: env\Scripts\activate
   ```
 
-1. **Install dependencies** using pip:
+1. **Install dependencies** (if not present) using pip:
 
   ``` bash
-    pip install configparser opencv-python Pillow numpy keras_ocr inference_sdk influxdb-client paho-mqtt
+    pip install configparser argparser pillow keras_ocr inference_sdk influxdb-client paho-mqtt tensorflow==2.15
   ```
 
-1. **Configuration**: Create a `server_config.ini` file with the following structure:
+> Note: More recent versions of tensorflow library do not work properly.
 
-    ```ini
-    [Settings]
-    DEVICE_ID = your_device_id
-    CLIENT_ID = your_client_id
+1. **Configuration**: The config file named `server_config.ini` file is avaiable in this folder. It is possible to use your own config file.
 
-    [Roboflow]
-    MODEL_ID = your_model_id
-    API_URL = your_api_url
-    API_KEY = your_api_key
+1. **Sources installation**: copy the `server` folder inside the server device.
 
-    [InfluxDB]
-    INFLUXDB_URL = your_influxdb_url
-    INFLUXDB_TOKEN = your_influxdb_token
-    INFLUXDB_ORG = your_org
-    INFLUXDB_BUCKET = your_bucket
+### 🛜 MQTT Broker
 
-    [MQTT Settings]
-    USER = your_mqtt_user
-    PASSWORD = your_mqtt_password
-    BROKER = your_broker_url
-    PORT = your_broker_port
-
-    [MQTT Topics]
-    TOPIC_SUBSCRIBE = your_topic_subscribe
-    TOPIC_TARGET = your_topic_target
-    TOPIC_DEBUG = your_topic_debug
-    ```
-
-1. **MQTT Broker**
-
-Execute the following commands in the Raspberry Pi's shell:
+Execute the following commands in the server's shell:
 
 ```bash
 sudo apt update
@@ -88,14 +68,26 @@ sudo systemctl enable mosquitto
 sudo systemctl start mosquitto
 ```
 
-### Upload files
+A copy of the configuration file is avaiable as `mqtt_broker.conf`.
 
-Copy the files contained in the server folder into the raspberry storage
+### 💾 InfluxDB
 
-#### Run the server
+1. Download and install influxdb on the target device.
+2. Run the program and connect to the web interface (usually at <http://localhost:8086>).
+3. Register a new user.
+4. Create a bucket with the name used in the configuration file of the server (for example *license_plate_data*) and copy the token and organization in the configuration file.
+5. Browse to src/test_tools/influx_connection.py and edit the `configuration example` and the `add plate profile` sections in order to establish a connection and add custom plates. This script can be reused to add or remove allowed plates.
 
-Browse into the folder containing previous files and run this command:
+## 🚀 Run the server
+
+Browse into the server folder and launch the program with this shell command:
 
 ``` bash
-python3 mqtt_image_receiver.py
+python3 roboflow_server
+```
+
+If a custom configuration file is present, launch the program with this shell command:
+
+``` bash
+python3 roboflow_server --config your_config_file.ini
 ```

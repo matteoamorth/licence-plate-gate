@@ -7,11 +7,10 @@
                                             
                                             
 # parsing libraries
-import configparser, json
+import configparser, json, argparse
 
 # images libraries
-import cv2, io
-import numpy as np
+import io
 from PIL import Image
 
 
@@ -22,7 +21,6 @@ from inference_sdk import InferenceHTTPClient
 # influxDB 
 from influxdb_client import InfluxDBClient, Point, rest
 from influxdb_client.client.write_api import SYNCHRONOUS
-from influxdb_client.rest import ApiException
 
 # mqtt
 import paho.mqtt.client as mqtt
@@ -41,7 +39,6 @@ import colorlog
 #                                                        __/ |    
 #                                                       |___/     
 
-CONFIG_FILENAME = 'server_config.ini'
 STRING_MODE  = 1
 CHARS_MODE   = 2
 CAMERA_MODE  = 3
@@ -55,14 +52,14 @@ log = logging.getLogger('LPG-Server')
 log.setLevel(logging.DEBUG)
 
 # File
-file_formatter = logging.Formatter('%(asctime)s [%(levelname)s] - %(message)s')
+file_formatter = logging.Formatter('%(asctime)s [%(levelname)s]\t%(message)s')
 file_handler = logging.FileHandler('log/plate_recognition_server.log')
 file_handler.setFormatter(file_formatter)
 file_handler.setLevel(logging.DEBUG)
 log.addHandler(file_handler)
 
 # Console
-console_formatter = colorlog.ColoredFormatter('%(log_color)s%(asctime)s [%(name)s] - %(levelname)s - %(message)s',
+console_formatter = colorlog.ColoredFormatter('%(log_color)s%(asctime)s [%(name)s] %(levelname)s\t%(message)s',
     log_colors={
         'DEBUG': 'white',
         'INFO': 'green',
@@ -78,12 +75,16 @@ console_handler.setLevel(logging.DEBUG)
 log.addHandler(console_handler)
 
 
-log.info('\n######################################################################\n\nPlate recognition server\n\n######################################################################\n')
+log.info('[START]    Plate recognition server\n')
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Licence-plate-gate server script.')
+    parser.add_argument('--config', type=str, default='server_config.ini', help='Configuration file (default: server_config.ini)')
+    return parser.parse_args()
 
-######################################################################
+############################################################################################################################################
 
-class Program:
+class Roboflow_server:
     
     """
     #
@@ -100,23 +101,30 @@ class Program:
     # Setup
     def __init__(self):
          
-        log.info('Server init ...')
+        log.info('[SETUP]    Server initialization')
+        args = parse_arguments()
+        config_filename = args.config
+        config = configparser.ConfigParser()
+        config.read(config_filename)
+
+        if not config.sections():
+            log.error(f"[SETUP]    Can't read config file: {config_filename}")
+            exit(1)
+        
+        log.info(f'[SETUP]    Using configuration file: {config_filename}')
+        
         
         self.state = 'idle'
         self.encoded_img = bytearray()
         self.msg_payload = ""
         self.prediction = None
         
-        config = configparser.ConfigParser()
-        config.read(CONFIG_FILENAME)
-        
-        
         self.DEVICE_ID = config['Settings']['DEVICE_ID']
         self.CLIENT_ID = config['Settings']['CLIENT_ID'] ## make it an array
-        log.info('DEVICE ID: ' + str(self.DEVICE_ID))
+        log.info('[SETUP]    DEVICE ID: ' + str(self.DEVICE_ID))
         
         # model 
-        log.debug('Loading Roboflow model')
+        log.debug('[SETUP]    Loading Roboflow model')
         self.MODEL_ID = config['Roboflow']['MODEL_ID']
         self.robo_client =  InferenceHTTPClient(
             api_url = config['Roboflow']['API_URL'],
@@ -132,9 +140,6 @@ class Program:
         if self.state == "exit":
             return
         
-        log.info("[CORE] - Waiting for incoming messages")
-    
-        
     """
     #   _____        __ _            _____  ____             _                 
     #  |_   _|      / _| |          |  __ \|  _ \           | |                
@@ -148,7 +153,7 @@ class Program:
     # InfluxDB
     def influxdb_setup(self,config): 
         try:
-            log.debug('[INFLUXDB] - Loading')
+            log.debug('[INFLUXDB] Loading')
             self.influx_client = InfluxDBClient(url=config['InfluxDB']['INFLUXDB_URL'], 
                                                 token=config['InfluxDB']['INFLUXDB_TOKEN'],
                                                 org=config['InfluxDB']['INFLUXDB_ORG'])
@@ -163,15 +168,15 @@ class Program:
             
             for table in result:
                 for record in table.records:
-                    log.debug(f"[INFLUXDB] - Bucket avaiable: {record.values.get('name')}")
+                    log.debug(f"[INFLUXDB] Bucket avaiable: {record.values.get('name')}")
 
         except rest.ApiException as e:
-            log.error(f"[INFLUXDB] - Connection error: {e}")
+            log.error(f"[INFLUXDB] Connection error: {e}")
             self.state = "exit"
             return
         
         except Exception as e:
-            log.error(f"[INFLUXDB] - Error: {e}")
+            log.error(f"[INFLUXDB] Error: {e}")
             self.state = "exit"
             return
         
@@ -179,7 +184,7 @@ class Program:
         self.influx_bucket = config['InfluxDB']['INFLUXDB_BUCKET'] 
 
     def store_access_record(self, plate, value):
-        log.debug(f'[INFLUXDB] - Writing record: {plate}')
+        log.debug(f'[INFLUXDB] Writing record: {plate}')
         point = (
                 Point("car_plates")
                 .tag("plate",plate)
@@ -200,7 +205,7 @@ class Program:
     """
     # MQTT 
     def MQTT_setup(self,config):
-        log.debug('[MQTT] - Loading')
+        log.debug('[MQTT]     Loading')
         self.mqtt_client = mqtt.Client()
         self.mqtt_client.username_pw_set(config['MQTT Settings']['USER'], config['MQTT Settings']['PASSWORD'])
         
@@ -215,15 +220,15 @@ class Program:
         try:
             self.mqtt_client.connect(config['MQTT Settings']['BROKER'], int(config['MQTT Settings']['PORT']), 60)
         except Exception as e:
-            log.error(f'[MQTT] - Connection to broker failed: {e}')
+            log.error(f'[MQTT]     Connection to broker failed: {e}')
             return
         
         
         try:
             self.mqtt_client.subscribe(config['MQTT Topics']['TOPIC_SUBSCRIBE'])
-            log.info(f"[MQTT] - Sucessufully connected to topic: {config['MQTT Topics']['TOPIC_SUBSCRIBE']}")
+            log.info(f"[MQTT]     Sucessufully connected to topic: {config['MQTT Topics']['TOPIC_SUBSCRIBE']}")
         except ValueError as e:
-            log.error(f"[MQTT] - Subscription with MQTT topic failed: {e}")
+            log.error(f"[MQTT]     Subscription with MQTT topic failed: {e}")
             return
         
         self.mqtt_client.loop_start()
@@ -232,30 +237,32 @@ class Program:
 
         if rc != mqtt.MQTT_ERR_SUCCESS:
             self.state = "exit"
-            log.error(f"[MQTT] - Message not sent: {msg.rc}")
+            log.error(f"[MQTT]     Message not sent: {msg.rc}")
             return
             
-        log.info('[MQTT] - Broker connected')
+        log.info('[MQTT]     Broker connected')
         msg = str(self.DEVICE_ID) + ": handshake connection"
         rc = self.send_msg(self.mqtt_dbg, msg)
         
         
         if rc != mqtt.MQTT_ERR_SUCCESS:
             self.state = "exit"
-            log.error(f"[MQTT] - Message not sent: {msg.rc}")
+            log.error(f"[MQTT]     Message not sent: {msg.rc}")
             return
         
-        log.debug("[MQTT] - published message to broker")
-                                                                                                              
+        log.debug("[MQTT]     published message to broker")
+        log.info("[SETUP]    Setup completed")
+        log.info("[CORE]     Waiting for incoming messages")
+                                                                                                      
     def on_message(self, mqtt_client, userdata, msg):
-        log.info('[MQTT] - Reading incoming message...')
+        log.info('[MQTT]     Reading incoming message...')
         
         try:
             msg = json.loads(msg.payload.decode())
-            log.debug(f'[MQTT] - Received message')
+            log.debug(f'[MQTT]     Received message')
             
             if msg['device_id'] not in self.CLIENT_ID:
-                log.warning('[MQTT] - No record match')
+                log.warning('[MQTT]     No record match')
                 self.state = "idle"
                 return
             
@@ -263,35 +270,35 @@ class Program:
                 self.mqtt_client.loop_stop()
                 self.msg_payload = msg
                 self.state = 'string_detection'
-                log.debug(f"[CORE] - String evaluation mode")
+                log.debug(f"[CORE]     String evaluation mode")
                 return
             
             if msg['mode'] != CAMERA_MODE and msg['mode'] != CHARS_MODE:
-                log.debug(f"[MQTT] - Unknown mode {msg['mode']}") 
+                log.debug(f"[MQTT]     Unknown mode {msg['mode']}") 
                 self.state = 'idle' 
                 self.msg_payload = ""
-                log.info("[CORE] - Waiting for incoming messages with known mode")
+                log.info("[CORE]     Waiting for incoming messages with known mode")
                 return
             
             # full msg reconstruction
             if msg['payload'] == 'END_DATA':
-                log.debug("[CORE] - Full image received")
+                log.debug("[CORE]     Full image received")
                 self.mqtt_client.loop_stop()
                 self.msg_payload = io.BytesIO(self.encoded_img)
                 
                 if msg['mode'] == CAMERA_MODE:
                     self.state = 'plate_detection' 
-                    log.debug(f"[CORE] - {self.state} mode")
+                    log.debug(f"[CORE]     {self.state} mode")
                     self.encoded_img = bytearray()
                     return
                 elif msg['mode'] == CHARS_MODE:
                     self.state = 'chars_detection'
-                    log.debug(f"[CORE] - {self.state} mode")
+                    log.debug(f"[CORE]     {self.state} mode")
                     self.encoded_img = bytearray()
                     return
                 else:
                     self.state = 'idle'
-                    log.info("[CORE] - Waiting for incoming messages with known mode")
+                    log.info("[CORE]     Waiting for incoming messages with known mode")
                     return
                 
             
@@ -301,15 +308,15 @@ class Program:
             
         except Exception as e:
             self.mqtt_client.loop_stop()
-            log.error(f'[MQTT] - Failed to process message: {e}')
+            log.error(f'[MQTT]     Failed to process message: {e}')
             self.state = 'exit'
            
     def send_msg(self, topic_target, message):
         msg = self.mqtt_client.publish(topic_target, message)
         if msg.rc == mqtt.MQTT_ERR_SUCCESS:
-            log.debug(f"[MQTT] - Sent message to topic '{topic_target}': {message}")
+            log.debug(f"[MQTT]     Sent message to topic '{topic_target}': {message}")
         else:
-            log.warning(f"[MQTT] - Message not sent: {msg.rc}")
+            log.warning(f"[MQTT]     Message not sent: {msg.rc}")
         
         return msg.rc
     
@@ -326,12 +333,12 @@ class Program:
     """
     # Data processing
     def plate_detection(self):
-        log.info('[CORE] - Processing images...')
+        log.info('[CORE]     Processing images...')
         
         if self.msg_payload == "":
-            log.warning('[CORE] - No image decoded') 
+            log.warning('[CORE]     No image decoded') 
             self.state = 'idle'
-            log.info("[CORE] - Waiting for incoming messages")
+            log.info("[CORE]     Waiting for incoming messages")
             self.mqtt_client.loop_start()
             return
         
@@ -341,10 +348,10 @@ class Program:
         result = self.robo_client.infer(self.msg_payload, model_id=self.MODEL_ID)
         
         if result is None:
-            log.warning('[CORE] - No plate detected.')
+            log.warning('[CORE]     No plate detected.')
             self.state = 'idle'
             self.msg_payload = ""
-            log.info("[CORE] - Waiting for incoming messages")
+            log.info("[CORE]     Waiting for incoming messages")
             self.mqtt_client.loop_start()
             return
         
@@ -352,20 +359,20 @@ class Program:
         best_plate = max(predictions, key=lambda p: p['confidence'])
         
         if self.prediction is None:
-            log.debug('[CORE] - New plate detected.')
+            log.debug('[CORE]     New plate detected.')
             self.prediction = best_plate
             self.msg_payload = ""
             self.state = 'idle'
-            log.info("[CORE] - Waiting for incoming messages")
+            log.info("[CORE]     Waiting for incoming messages")
             self.mqtt_client.loop_start()
             return
 
         if self.prediction['width'] > best_plate['width']:
-            log.debug('[CORE] - Car leaving ...')
+            log.debug('[CORE]     Car leaving ...')
             self.prediction = None
             self.msg_payload = ""
             self.state = 'idle'
-            log.info("[CORE] - Waiting for incoming messages")
+            log.info("[CORE]     Waiting for incoming messages")
             self.mqtt_client.loop_start()
             return
         
@@ -373,7 +380,7 @@ class Program:
         self.state = 'img_crop'
         
     def img_crop(self):
-        log.debug('[CORE] - Selecting the plate ...')
+        log.debug('[CORE]     Selecting the plate ...')
         x = self.prediction['x']
         y = self.prediction['y']
         w = self.prediction['width']
@@ -393,12 +400,12 @@ class Program:
         byte_arr.seek(0) 
         self.msg_payload = byte_arr
         
-        log.debug('[CORE] - Cropped image created')
+        log.debug('[CORE]     Cropped image created')
         
         self.state = 'chars_detection'
        
     def chars_detection(self):
-        log.debug('[CORE] - Processing plate...')
+        log.debug('[CORE]     Processing plate...')
         
         def clean_text(text):
             cleaned_text = ''
@@ -408,9 +415,9 @@ class Program:
             return cleaned_text
             
         if self.msg_payload == "":
-            log.warning('[CORE] - No image decoded'); 
+            log.warning('[CORE]     No image decoded'); 
             self.state = 'idle'
-            log.info("[CORE] - Waiting for incoming messages")
+            log.info("[CORE]     Waiting for incoming messages")
             self.mqtt_client.loop_start()
             return
         
@@ -424,12 +431,12 @@ class Program:
         cleaned_res = clean_text(merged_red)
         recognized_text = cleaned_res.upper()
         
-        log.debug(f"[CORE] - Recognized text: {recognized_text}")
+        log.debug(f"[CORE]     Recognized text: {recognized_text}")
         self.msg_payload = recognized_text
         self.state = 'string_detection'
     
     def string_detection(self):
-        log.info(f'[CORE] - Processing STRING_MODE...')
+        log.info(f'[CORE]     Processing STRING_MODE...')
         
         query = f'''
             from(bucket: "{self.influx_bucket}")
@@ -444,27 +451,27 @@ class Program:
             result = self.influx_query_api.query(query=query, org=self.influx_org)
             
             if result:
-                log.debug(f'[INFLUXDB] - Record "{self.msg_payload}" found.')
+                log.debug(f'[INFLUXDB] Record "{self.msg_payload}" found.')
                 if result[0].records[0].get_value() == ACTIVE_PLATE:
                     self.store_access_record(self.msg_payload, ACTIVE_PLATE)
-                    log.info(f'[INFLUXDB] - Plate "{self.msg_payload}" authorized')
+                    log.info(f'[INFLUXDB] Plate "{self.msg_payload}" authorized')
                     self.open_gate()
                     
                 else:
                     self.store_access_record(self.msg_payload, DEPRECATED_PLATE)
-                    log.info(f'[INFLUXDB] - Plate "{self.msg_payload}" not authorized')
+                    log.info(f'[INFLUXDB] Plate "{self.msg_payload}" not authorized')
             else:
-                log.info(f'[INFLUXDB] - Record "{self.msg_payload}" not found.')
+                log.info(f'[INFLUXDB] Record "{self.msg_payload}" not found.')
 
         except Exception as e:
-            log.error(f'[INFLUXDB] - Failed to query: {e}')
+            log.error(f'[INFLUXDB] Failed to query: {e}')
 
         log.debug("[CORE] MQTT connection restarting")
         self.state = "idle" 
         self.msg_payload = ""
         self.mqtt_client.loop_start()
         
-        log.info("[CORE] - Waiting for incoming messages")                                              
+        log.info("[CORE]     Waiting for incoming messages")                                              
     
     
     """
@@ -485,17 +492,17 @@ class Program:
         }
             
         if self.send_msg(self.mqtt_targ, json.dumps(msg)) == mqtt.MQTT_ERR_SUCCESS:
-            log.info('[MQTT] - Sending opening gate..')
+            log.info('[MQTT]     Sending opening gate..')
         else:
-            log.error("[MQTT] - Can't open gate, quitting...")
+            log.error("[MQTT]     Can't open gate, quitting...")
             self.state = "exit"
 
     def idle(self):
         pass    
     
     def exit(self):
-        log.info("[CORE] - Closing program")
-        self.state = 'null'
+        log.info("[CORE]     Closing program")
+        exit(1)
         
     def run(self):
         state_functions = {
@@ -517,9 +524,6 @@ class Program:
             
             
 if __name__ == "__main__":
-    
-    config = configparser.ConfigParser()
-    config.read(CONFIG_FILENAME)
-    sm = Program()
+    sm = Roboflow_server()
     
     sm.run()
