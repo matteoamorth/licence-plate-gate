@@ -60,12 +60,16 @@ The edge device is the first element of the system. It must be run neural networ
 
 A device with a good-quality camera and a connection can achieve good results. For this project, an OpenMV Cam H7 Plus with a connection extension board has been choosen.
 
+![Camera](report/cam.JPG "The camera pcb")
+
 ### 💻 Server
 
 The server can operate in two modes:
 
 - **Database**: Performs simple operations to check license plate records.
 - **Fog Device**: Analyzes images and performs operations.
+
+![Server](report/raspberry.jpg "The raspberrypi")
 
 ### 🦾 Actuator
 
@@ -158,7 +162,9 @@ This flow can be selected setting the field `MODE = 1`;
 
 ### 🛜 Connection
 
-Devices interact using MQTT protocol. A simple WLAN connection is sufficient for performing all the tasks included.
+Devices interact using MQTT protocol. A simple WLAN connection is sufficient for performing all the tasks included. For this project, a WIFI shield has been coupled with openMV Cam
+
+![WIFI Shield](report/shield.jpg "WIFI shield")
 
 ### 🚨 Security
 
