@@ -34,17 +34,17 @@ class InfluxDBConnection:
 config = {
     'InfluxDB': {
         'INFLUXDB_URL': 'http://localhost:8086',
-        'INFLUXDB_TOKEN': 'xxx',    # InfluxDB token to insert
+        'INFLUXDB_TOKEN': 'WUapt2nHMnrPO4QmmkD4xdVmZrPScXxGbVVuvoQ_2sWz-6aTpLhlV2grsdAU_T9n6E2KSS-cXwn79mCcTbufrw==',    # InfluxDB token to insert
         'INFLUXDB_ORG': 'unitn',    # InfluxDB organization
-        'INFLUXDB_BUCKET': 'license_plate_data'
+        'INFLUXDB_BUCKET': 'iot_project'
     }
 }
 
 
 # ADD PLATE PROFILE
-point = (
+plate = (
     Point("car_plates")
-    .tag("plate","AB123CD") # custom plate
+    .tag("plate","MN012OP") # custom plate
     .field("value", 1)      # 1 allowed plate, -1 disable plate
   )
 
@@ -57,5 +57,5 @@ point = (
 influx_connection = InfluxDBConnection(config)
 influx_connection.write_record(config['InfluxDB']['INFLUXDB_BUCKET'], 
                                config['InfluxDB']['INFLUXDB_ORG'],
-                               point)
+                               plate)
 

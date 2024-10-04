@@ -118,9 +118,10 @@ class Roboflow_server:
         self.encoded_img = bytearray()
         self.msg_payload = ""
         self.prediction = None
+        self.CLIENT_ID = ""
         
         self.DEVICE_ID = config['Settings']['DEVICE_ID']
-        self.CLIENT_ID = config['Settings']['CLIENT_ID'] ## make it an array
+        self.CLIENT_LIST = config['Settings']['CLIENT_ID'] ## make it an array
         log.info('[SETUP]    DEVICE ID: ' + str(self.DEVICE_ID))
         
         # model 
@@ -261,10 +262,12 @@ class Roboflow_server:
             msg = json.loads(msg.payload.decode())
             log.debug(f'[MQTT]     Received message')
             
-            if msg['device_id'] not in self.CLIENT_ID:
+            if msg['device_id'] not in self.CLIENT_LIST:
                 log.warning('[MQTT]     No record match')
                 self.state = "idle"
                 return
+            
+            self.CLIENT_ID = msg['device_id']
             
             if msg['mode'] == STRING_MODE: 
                 self.mqtt_client.loop_stop()
@@ -298,6 +301,8 @@ class Roboflow_server:
                     return
                 else:
                     self.state = 'idle'
+                    self.CLIENT_ID = ""
+                    self.msg_payload = ""
                     log.info("[CORE]     Waiting for incoming messages with known mode")
                     return
                 
@@ -462,7 +467,8 @@ class Roboflow_server:
                     log.info(f'[INFLUXDB] Plate "{self.msg_payload}" not authorized')
             else:
                 log.info(f'[INFLUXDB] Record "{self.msg_payload}" not found.')
-
+                self.store_access_record(self.msg_payload, DEPRECATED_PLATE)
+                    
         except Exception as e:
             log.error(f'[INFLUXDB] Failed to query: {e}')
 
@@ -487,12 +493,13 @@ class Roboflow_server:
     # Lifecycle
     def open_gate(self):
         msg = {
-            "device_id": self.DEVICE_ID,
-            "action": "gate_open"
+            "device_id": self.CLIENT_ID,
+            "payload": "gate_open"
         }
             
         if self.send_msg(self.mqtt_targ, json.dumps(msg)) == mqtt.MQTT_ERR_SUCCESS:
             log.info('[MQTT]     Sending opening gate..')
+            self.CLIENT_ID = ""
         else:
             log.error("[MQTT]     Can't open gate, quitting...")
             self.state = "exit"

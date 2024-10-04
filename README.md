@@ -2,6 +2,8 @@
 
 An IoT system that reads license plates of vehicles and activates gates.
 
+![Project cover](report/licence-plate-gate-cover.png "The licence plate gate project scheme")
+
 ## Table of Contents
 
 - [🏠 🚧 🚗  License Plate Gate](#----license-plate-gate)
@@ -21,6 +23,8 @@ An IoT system that reads license plates of vehicles and activates gates.
       - [4. Lightweight camera](#4-lightweight-camera)
     - [🛜 Connection](#-connection)
     - [🚨 Security](#-security)
+    - [💾 Storage](#-storage)
+    - [📈 Dashboard](#-dashboard)
   - [🛠 Installation](#-installation)
     - [Edge Device](#edge-device)
     - [Server](#server)
@@ -79,7 +83,10 @@ License plate and character recognition are performed using machine learning mod
 The sources used to train the Plate Detection Model are avaiable in the `datasets` folders.
 
 The Character Recognition Model relies on keras `OCR (Optical Character Recognition)` library.
+
 ### ⚙️ Configurations
+
+Both edge-device ang server can be customized with the configuration files avaiable in the respective folders.
 
 The software provided in this project allow to select different solutions based on the hardware constraints. There are four possible alternatives.
 
@@ -147,9 +154,11 @@ On lightweight camera, image acquisition is the only task installed on the board
 
 This flow can be selected setting the field `MODE = 1`;
 
+> **NOTE**: This configuration implements a much more simple code, that is suitable for low-specs hardware with micropython (like the openMV Cam H7)
+
 ### 🛜 Connection
 
-Devices interact using MQTT protocol. A simple LAN connection is sufficient for performing all the tasks included.
+Devices interact using MQTT protocol. A simple WLAN connection is sufficient for performing all the tasks included.
 
 ### 🚨 Security
 
@@ -158,6 +167,20 @@ Devices connected to the server must be registered in the configuration file of 
 Server has a log feature that registers all actions performed and save them in a file.
 
 The database is structured such that every attempt of access by cars will be stored in the plates table with time information.
+
+### 💾 Storage
+
+The database used for this project is based on InfluxDB. It has been choosen because it has all the basic features present in a common database plus a simple integration with python and other softwares.
+
+![InfluxDB webpage](report/influxDB.png "InfluxDB webpage")
+
+### 📈 Dashboard
+
+In order to allow a user to understand how the system is working, a simple but powerfull dashboard has been implement with the Grafana environment.
+
+The interface shows the daily history of accesses, two quick links of last allowed and rejected car and statistics about cars accesses.
+
+![Dashboard screenshot](report/dashboard_grafana.png "The dashboard")
 
 ## 🛠 Installation
 
