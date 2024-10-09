@@ -1,0 +1,15 @@
+digraph flow_chart {
+    "Environment"-> "Car plate"
+    "Car plate" -> "edge-device"
+    "edge-device" -> "Server" [label="\nWireless\nconnection"]
+    "Server" -> "Plate\ndetection" 
+
+    "Plate\ndetection" -> "Chars\nrecognition" 
+    
+    "Chars\nrecognition" -> "Data\nevaluation" [label="\nInternet\nconnection"]
+
+    "Data\nevaluation" -> "Action\nexecution"
+
+    "Action\nexecution" -> "Car plate"
+
+}

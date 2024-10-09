@@ -1,0 +1,9 @@
+digraph "mqtt"{
+    
+    "edge\ndevice"-> "cam_target" [label="publish"]
+    "edge\ndevice"-> "plate_check" [label="subscribe"]
+    
+    "cam_target"->server [label="subscribe"]
+    "plate_check"->server [label="publish"]
+    server->"cam_debug" [label="publish"]
+}

@@ -1,0 +1,70 @@
+digraph "State Machine"{
+
+    # states
+    start
+    setup
+    load_models
+    load_connections
+    load_gpio
+    decode
+    reset
+    plate
+    chars
+    send_msg
+    validation
+    action_open
+    
+    img2base64
+    exit
+    
+
+    # transitions
+
+    start->setup
+
+    setup->load_models
+    setup->load_connections
+
+    load_models->exit
+    load_models->load_connections
+    load_models->load_gpio
+
+    load_connections->load_gpio
+    load_connections->exit
+
+    load_gpio->plate
+
+    plate->img2base64
+
+    plate->plate
+    plate->chars
+
+    img2base64->send_msg
+
+    chars->send_msg
+    chars->validation
+    
+    chars->plate
+
+    validation->action_open
+    validation->plate
+
+    
+    
+    send_msg->plate
+    send_msg->decode
+
+    decode->reset
+    decode->plate
+    
+    decode->action_open
+    decode->exit
+
+    
+    action_open->plate
+    
+    reset->setup
+
+    start [shape=Mdiamond];
+    exit [shape=Mdiamond];
+}

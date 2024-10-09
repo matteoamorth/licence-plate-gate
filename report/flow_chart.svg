@@ -1,0 +1,111 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="656pt" height="474pt" viewBox="0.00 0.00 656.11 474.19">
+<g id="graph0" class="graph" transform="translate(56.982125140804015,357.00271545989443) scale(0.7546419732762583)" data-name="flow_chart">
+
+<polygon fill="white" stroke="none" points="-4,4 -4,-470.19 652.11,-470.19 652.11,4 -4,4"/>
+<!-- setup -->
+
+<!-- idle -->
+<g id="node2" class="node" pointer-events="visible" data-name="Car plate" data-comment="idle">
+
+<ellipse fill="none" stroke="black" cx="194.91" cy="-232.92" rx="46.32" ry="18"/>
+<text text-anchor="middle" x="194.91" y="-228.72" font-family="Times,serif" font-size="14.00">Car plate</text>
+</g>
+<!-- setup&#45;&gt;idle -->
+<g id="edge1" class="edge" data-name="Environment-&gt;Car plate" data-comment="setup-&gt;idle">
+
+<path fill="none" stroke="black" d="M123.11,-232.92C127.74,-232.92 132.4,-232.92 137.01,-232.92"/>
+<polygon fill="black" stroke="black" points="136.78,-236.42 146.78,-232.92 136.78,-229.42 136.78,-236.42"/>
+</g>
+<!-- message detection -->
+<g id="node3" class="node" pointer-events="visible" data-name="edge-device" data-comment="message detection">
+
+<ellipse fill="none" stroke="black" cx="273.51" cy="-396.11" rx="57.86" ry="18"/>
+<text text-anchor="middle" x="273.51" y="-391.91" font-family="Times,serif" font-size="14.00">edge-device</text>
+</g><g id="node4" class="node" pointer-events="visible" data-name="Server" data-comment="message detection">
+
+<ellipse fill="none" stroke="black" cx="450.1" cy="-436.42" rx="36.48" ry="18"/>
+<text text-anchor="middle" x="450.1" y="-432.22" font-family="Times,serif" font-size="14.00">Server</text>
+</g>
+<!-- idle&#45;&gt;message detection -->
+<g id="edge3" class="edge" data-name="edge-device-&gt;Server" data-comment="idle-&gt;message detection">
+
+<path fill="none" stroke="black" d="M320.83,-406.92C347.17,-412.93 379.77,-420.37 405.64,-426.27"/>
+<polygon fill="black" stroke="black" points="404.63,-429.63 415.16,-428.45 406.19,-422.81 404.63,-429.63"/>
+<text text-anchor="middle" x="332.52" y="-437.59" font-family="Times,serif" font-size="14.00">Wireless</text>
+<text text-anchor="middle" x="332.52" y="-420.79" font-family="Times,serif" font-size="14.00">connection</text>
+</g><g id="edge2" class="edge" data-name="Car plate-&gt;edge-device" data-comment="idle-&gt;message detection">
+
+<path fill="none" stroke="black" d="M203.63,-251.01C217.26,-279.31 243.74,-334.3 259.9,-367.86"/>
+<polygon fill="black" stroke="black" points="256.61,-369.09 264.1,-376.58 262.91,-366.05 256.61,-369.09"/>
+</g>
+<!-- plate detection -->
+<g id="node5" class="node" pointer-events="visible" data-name="Plate\ndetection" data-comment="plate detection">
+
+<ellipse fill="none" stroke="black" cx="591.71" cy="-323.48" rx="47.69" ry="29.33"/>
+<text text-anchor="middle" x="591.71" y="-327.68" font-family="Times,serif" font-size="14.00">Plate</text>
+<text text-anchor="middle" x="591.71" y="-310.88" font-family="Times,serif" font-size="14.00">detection</text>
+</g>
+<!-- message detection&#45;&gt;plate detection -->
+<g id="edge4" class="edge" data-name="Server-&gt;Plate\ndetection" data-comment="message detection-&gt;plate detection">
+
+<path fill="none" stroke="black" d="M469.49,-420.95C491,-403.8 526.23,-375.7 553.36,-354.07"/>
+<polygon fill="black" stroke="black" points="555.4,-356.92 561.03,-347.95 551.03,-351.45 555.4,-356.92"/>
+</g>
+<!-- Chars\nrecognition -->
+<g id="node6" class="node" pointer-events="visible" data-name="Chars\nrecognition">
+
+<ellipse fill="none" stroke="black" cx="591.71" cy="-142.35" rx="56.3" ry="29.33"/>
+<text text-anchor="middle" x="591.71" y="-146.55" font-family="Times,serif" font-size="14.00">Chars</text>
+<text text-anchor="middle" x="591.71" y="-129.75" font-family="Times,serif" font-size="14.00">recognition</text>
+</g>
+<!-- Plate\ndetection&#45;&gt;Chars\nrecognition -->
+<g id="edge5" class="edge" data-name="Plate\ndetection-&gt;Chars\nrecognition">
+
+<path fill="none" stroke="black" d="M591.71,-293.98C591.71,-263.94 591.71,-217.12 591.71,-183.46"/>
+<polygon fill="black" stroke="black" points="595.21,-183.66 591.71,-173.66 588.21,-183.66 595.21,-183.66"/>
+</g>
+<!-- Data\nevaluation -->
+<g id="node7" class="node" pointer-events="visible" data-name="Data\nevaluation">
+
+<ellipse fill="none" stroke="black" cx="450.1" cy="-29.42" rx="52.59" ry="29.33"/>
+<text text-anchor="middle" x="450.1" y="-33.62" font-family="Times,serif" font-size="14.00">Data</text>
+<text text-anchor="middle" x="450.1" y="-16.82" font-family="Times,serif" font-size="14.00">evaluation</text>
+</g>
+<!-- Chars\nrecognition&#45;&gt;Data\nevaluation -->
+<g id="edge6" class="edge" data-name="Chars\nrecognition-&gt;Data\nevaluation">
+
+<path fill="none" stroke="black" d="M560.64,-117.57C539.74,-100.9 512.02,-78.8 489.57,-60.89"/>
+<polygon fill="black" stroke="black" points="491.8,-58.2 481.8,-54.7 487.44,-63.67 491.8,-58.2"/>
+<text text-anchor="middle" x="494.39" y="-110.23" font-family="Times,serif" font-size="14.00">Internet</text>
+<text text-anchor="middle" x="494.39" y="-93.43" font-family="Times,serif" font-size="14.00">connection</text>
+</g>
+<!-- Action\nexecution -->
+<g id="node8" class="node" pointer-events="visible" data-name="Action\nexecution">
+
+<ellipse fill="none" stroke="black" cx="273.51" cy="-69.72" rx="49.59" ry="29.33"/>
+<text text-anchor="middle" x="273.51" y="-73.92" font-family="Times,serif" font-size="14.00">Action</text>
+<text text-anchor="middle" x="273.51" y="-57.12" font-family="Times,serif" font-size="14.00">execution</text>
+</g><g id="node1" class="node" pointer-events="visible" data-name="Environment" data-comment="Action\nexecution">
+
+<ellipse fill="none" stroke="black" cx="61.46" cy="-232.92" rx="61.41" ry="18"/>
+<text text-anchor="middle" x="61.46" y="-228.72" font-family="Times,serif" font-size="14.00">Environment</text>
+</g>
+<!-- Data\nevaluation&#45;&gt;Action\nexecution -->
+<g id="edge7" class="edge" data-name="Data\nevaluation-&gt;Action\nexecution">
+
+<path fill="none" stroke="black" d="M401.38,-40.54C379.72,-45.48 354.05,-51.34 331.42,-56.5"/>
+<polygon fill="black" stroke="black" points="330.69,-53.08 321.72,-58.72 332.25,-59.9 330.69,-53.08"/>
+</g>
+<!-- Action\nexecution&#45;&gt;Environment -->
+<!-- Action\nexecution&#45;&gt;Environment -->
+
+<!-- Action\nexecution&#45;&gt;Environment -->
+
+<g id="edge8" class="edge" data-name="Action\nexecution-&gt;Car plate" data-comment="Action\nexecution-&gt;Environment">
+
+<path fill="none" stroke="black" d="M259.82,-98.15C245.4,-128.08 222.85,-174.92 208.48,-204.75"/>
+<polygon fill="black" stroke="black" points="205.43,-203.02 204.24,-213.54 211.74,-206.05 205.43,-203.02"/>
+</g>
+</g>
+</svg>

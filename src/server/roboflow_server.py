@@ -258,12 +258,14 @@ class Roboflow_server:
     def on_message(self, mqtt_client, userdata, msg):
         log.info('[MQTT]     Reading incoming message...')
         
+        
         try:
             msg = json.loads(msg.payload.decode())
             log.debug(f'[MQTT]     Received message')
             
             if msg['device_id'] not in self.CLIENT_LIST:
                 log.warning('[MQTT]     No record match')
+                self.send_msg(self.mqtt_dbg, '[MQTT]     No record match')
                 self.state = "idle"
                 return
             
@@ -274,6 +276,7 @@ class Roboflow_server:
                 self.msg_payload = msg
                 self.state = 'string_detection'
                 log.debug(f"[CORE]     String evaluation mode")
+                self.send_msg(self.mqtt_dbg, f"[CORE]     String evaluation mode")
                 return
             
             if msg['mode'] != CAMERA_MODE and msg['mode'] != CHARS_MODE:
@@ -281,11 +284,13 @@ class Roboflow_server:
                 self.state = 'idle' 
                 self.msg_payload = ""
                 log.info("[CORE]     Waiting for incoming messages with known mode")
+                self.send_msg(self.mqtt_dbg, "[CORE]     Waiting for incoming messages with known mode")
                 return
             
             # full msg reconstruction
             if msg['payload'] == 'END_DATA':
                 log.debug("[CORE]     Full image received")
+                self.send_msg(self.mqtt_dbg, "[CORE]     Full image received")
                 self.mqtt_client.loop_stop()
                 self.msg_payload = io.BytesIO(self.encoded_img)
                 
@@ -304,6 +309,7 @@ class Roboflow_server:
                     self.CLIENT_ID = ""
                     self.msg_payload = ""
                     log.info("[CORE]     Waiting for incoming messages with known mode")
+                    self.send_msg(self.mqtt_dbg, '[CORE]     Waiting for incoming messages with known mode')
                     return
                 
             
@@ -313,7 +319,8 @@ class Roboflow_server:
             
         except Exception as e:
             self.mqtt_client.loop_stop()
-            log.error(f'[MQTT]     Failed to process message: {e}')
+            log.error(f"[MQTT]     Failed to process message: {e}")
+            self.send_msg(self.mqtt_dbg, f"[MQTT]     Failed to process message: {e}")
             self.state = 'exit'
            
     def send_msg(self, topic_target, message):
@@ -339,9 +346,11 @@ class Roboflow_server:
     # Data processing
     def plate_detection(self):
         log.info('[CORE]     Processing images...')
+        self.send_msg(self.mqtt_dbg, '[CORE]     Processing images...')
         
         if self.msg_payload == "":
             log.warning('[CORE]     No image decoded') 
+            self.send_msg(self.mqtt_dbg, '[CORE]     No image decoded')
             self.state = 'idle'
             log.info("[CORE]     Waiting for incoming messages")
             self.mqtt_client.loop_start()
@@ -350,10 +359,11 @@ class Roboflow_server:
         self.msg_payload = Image.open(self.msg_payload)
         
         
-        result = self.robo_client.infer(self.msg_payload, model_id=self.MODEL_ID)
+        result = self.robo_client.infer(self.msg_payload, model_id=self.MtODEL_ID)
         
         if result is None:
             log.warning('[CORE]     No plate detected.')
+            self.send_msg(self.mqtt_dbg, '[CORE]     No plate detected.')
             self.state = 'idle'
             self.msg_payload = ""
             log.info("[CORE]     Waiting for incoming messages")
@@ -365,6 +375,7 @@ class Roboflow_server:
         
         if self.prediction is None:
             log.debug('[CORE]     New plate detected.')
+            self.send_msg(self.mqtt_dbg, '[CORE]     New plate detected.')
             self.prediction = best_plate
             self.msg_payload = ""
             self.state = 'idle'
@@ -374,6 +385,7 @@ class Roboflow_server:
 
         if self.prediction['width'] > best_plate['width']:
             log.debug('[CORE]     Car leaving ...')
+            self.send_msg(self.mqtt_dbg, '[CORE]     Car leaving ...')
             self.prediction = None
             self.msg_payload = ""
             self.state = 'idle'
@@ -386,6 +398,7 @@ class Roboflow_server:
         
     def img_crop(self):
         log.debug('[CORE]     Selecting the plate ...')
+        self.send_msg(self.mqtt_dbg, '[CORE]     Selecting the plate ...')
         x = self.prediction['x']
         y = self.prediction['y']
         w = self.prediction['width']
@@ -406,11 +419,13 @@ class Roboflow_server:
         self.msg_payload = byte_arr
         
         log.debug('[CORE]     Cropped image created')
+        self.send_msg(self.mqtt_dbg, '[CORE]     Cropped image created')
         
         self.state = 'chars_detection'
        
     def chars_detection(self):
         log.debug('[CORE]     Processing plate...')
+        self.send_msg(self.mqtt_dbg, '[CORE]     Processing plate...')
         
         def clean_text(text):
             cleaned_text = ''
@@ -421,6 +436,7 @@ class Roboflow_server:
             
         if self.msg_payload == "":
             log.warning('[CORE]     No image decoded'); 
+            self.send_msg(self.mqtt_dbg, '[CORE]     No image decoded')
             self.state = 'idle'
             log.info("[CORE]     Waiting for incoming messages")
             self.mqtt_client.loop_start()
@@ -437,11 +453,13 @@ class Roboflow_server:
         recognized_text = cleaned_res.upper()
         
         log.debug(f"[CORE]     Recognized text: {recognized_text}")
+        self.send_msg(self.mqtt_dbg, f"[CORE]     Recognized text: {recognized_text}")
         self.msg_payload = recognized_text
         self.state = 'string_detection'
     
     def string_detection(self):
-        log.info(f'[CORE]     Processing STRING_MODE...')
+        log.info(f"[CORE]     Processing STRING_MODE...")
+        self.send_msg(self.mqtt_dbg, f"[CORE]     Processing STRING_MODE...")
         
         query = f'''
             from(bucket: "{self.influx_bucket}")
@@ -457,27 +475,32 @@ class Roboflow_server:
             
             if result:
                 log.debug(f'[INFLUXDB] Record "{self.msg_payload}" found.')
+                
                 if result[0].records[0].get_value() == ACTIVE_PLATE:
                     self.store_access_record(self.msg_payload, ACTIVE_PLATE)
                     log.info(f'[INFLUXDB] Plate "{self.msg_payload}" authorized')
+                    self.send_msg(self.mqtt_dbg, f'[INFLUXDB] Plate "{self.msg_payload}" authorized')
                     self.open_gate()
                     
                 else:
                     self.store_access_record(self.msg_payload, DEPRECATED_PLATE)
                     log.info(f'[INFLUXDB] Plate "{self.msg_payload}" not authorized')
+                    self.send_msg(self.mqtt_dbg, f'[INFLUXDB] Plate "{self.msg_payload}" not authorized')
             else:
                 log.info(f'[INFLUXDB] Record "{self.msg_payload}" not found.')
+                self.send_msg(self.mqtt_dbg, f'[INFLUXDB] Record "{self.msg_payload}" not found.')
                 self.store_access_record(self.msg_payload, DEPRECATED_PLATE)
                     
         except Exception as e:
             log.error(f'[INFLUXDB] Failed to query: {e}')
+            self.send_msg(self.mqtt_dbg, f'[INFLUXDB] Failed to query: {e}')
 
         log.debug("[CORE] MQTT connection restarting")
         self.state = "idle" 
         self.msg_payload = ""
         self.mqtt_client.loop_start()
         
-        log.info("[CORE]     Waiting for incoming messages")                                              
+        log.info("[CORE]     Waiting for incoming messages")                                            
     
     
     """
@@ -499,9 +522,11 @@ class Roboflow_server:
             
         if self.send_msg(self.mqtt_targ, json.dumps(msg)) == mqtt.MQTT_ERR_SUCCESS:
             log.info('[MQTT]     Sending opening gate..')
+            self.send_msg(self.mqtt_dbg, '[MQTT]     Reading incoming message...')
             self.CLIENT_ID = ""
         else:
             log.error("[MQTT]     Can't open gate, quitting...")
+            self.send_msg(self.mqtt_dbg, '[MQTT]     Reading incoming message...')
             self.state = "exit"
 
     def idle(self):
@@ -527,6 +552,7 @@ class Roboflow_server:
                 state_function()
             else:
                 log.error(f"[CORE] Unknown state: {self.state}")
+                self.send_msg(self.mqtt_dbg, '[MQTT]     Unknown state - Closing program')
                 break
             
             

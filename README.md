@@ -32,10 +32,11 @@ An IoT system that reads license plates of vehicles and activates gates.
 
 ## 📜 Introduction
 
-The goal of this project is to develop an IoT system that allows registered vehicles to open various types of gates, barriers, and automated doors without the usage of a remote control. The system consists of three main components:
+The goal of this project is to develop an IoT system that allows registered vehicles to open various types of gates, barriers, and automated doors without the usage of any type of remote control or user interaction. The system consists of four main components:
 
-- **Edge Device**: Collects images from the field and identifies features of the license plate.
-- **Lightweight Server**: Collects data and publishes results.
+- **Edge Device**: Collects images from the field and send them through a network.
+- **Lightweight Server**: Collects data, performs operations and publishes results.
+- **Database**: Stores important data requested by the server.
 - **Actuator Device**: Performs actions based on the results published by the server.
 
 These components can be implemented on a **single device** (stand-alone configuration) or distributed across **multiple devices** (connected).
@@ -56,7 +57,7 @@ The system operates through the following steps:
 
 ### 📹 Edge Device
 
-The edge device is the first element of the system. It must be run neural network models and perform Wi-Fi connections. In an online system, image recognition tasks can be handled server-side, therefore lower minimum specs are required.
+The edge device is the first element of the system. It must acquire data from the environment and perform Wi-Fi connections. In an online system, image recognition tasks can be handled server-side, therefore lower minimum specs are required.
 
 A device with a good-quality camera and a connection can achieve good results. For this project, an OpenMV Cam H7 Plus with a connection extension board has been choosen.
 

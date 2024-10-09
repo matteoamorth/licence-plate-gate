@@ -34,7 +34,7 @@ class Edge_camera:
 
         self.topic_pub = self.cf['MQTT_topics']['TOPIC_TARGET']
 
-        self.state = "core"
+        self.state = "core_loop"
 
 
     def parse_value(self, value):
@@ -130,7 +130,7 @@ class Edge_camera:
 
         msg = ""
 
-    def core(self):
+    def core_loop(self):
         self.clock = time.clock()
         self.mqtt_client.check_msg()
 
@@ -166,8 +166,7 @@ class Edge_camera:
         while True:
             state_functions = {
                 "setup": self.setup,
-                "core": self.core,
-                "send_msg": self.send_msg,
+                "core_loop": self.core_loop
             }
 
             state_function = state_functions.get(self.state)
