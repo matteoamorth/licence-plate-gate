@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt
-
+import time
 import json
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
@@ -57,13 +57,13 @@ try:
         message = {
             "device_id": device_id,
             "mode": mode,
-            "payload": fragment.hex()  
+            "payload": fragment 
         }
         
         # Invia il messaggio
         client.publish(topic_subscribe, json.dumps(message))
         print(f"Inviato frammento di lunghezza {len(fragment)}")
-        
+        time.sleep(0.5)
     # Invia un messaggio di fine trasmissione
     end_message = {
         "device_id": device_id,

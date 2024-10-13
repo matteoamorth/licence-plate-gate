@@ -8,6 +8,7 @@
                                             
 # parsing libraries
 import configparser, json, argparse
+import numpy as np
 
 # images libraries
 import io
@@ -115,7 +116,7 @@ class Roboflow_server:
         
         
         self.state = 'idle'
-        self.encoded_img = bytearray()
+        self.encoded_img = []
         self.msg_payload = ""
         self.prediction = None
         self.CLIENT_ID = ""
@@ -257,10 +258,10 @@ class Roboflow_server:
                                                                                                       
     def on_message(self, mqtt_client, userdata, msg):
         log.info('[MQTT]     Reading incoming message...')
-        
-        
+
         try:
-            msg = json.loads(msg.payload.decode())
+            msg = json.loads(msg.payload.decode('utf-8'))
+
             log.debug(f'[MQTT]     Received message')
             
             if msg['device_id'] not in self.CLIENT_LIST:
@@ -292,17 +293,17 @@ class Roboflow_server:
                 log.debug("[CORE]     Full image received")
                 self.send_msg(self.mqtt_dbg, "[CORE]     Full image received")
                 self.mqtt_client.loop_stop()
-                self.msg_payload = io.BytesIO(self.encoded_img)
+                self.msg_payload = np.concatenate(self.encoded_img, axis=0)
                 
                 if msg['mode'] == CAMERA_MODE:
                     self.state = 'plate_detection' 
                     log.debug(f"[CORE]     {self.state} mode")
-                    self.encoded_img = bytearray()
+                    self.encoded_img = []
                     return
                 elif msg['mode'] == CHARS_MODE:
                     self.state = 'chars_detection'
                     log.debug(f"[CORE]     {self.state} mode")
-                    self.encoded_img = bytearray()
+                    self.encoded_img = []
                     return
                 else:
                     self.state = 'idle'
@@ -311,11 +312,20 @@ class Roboflow_server:
                     log.info("[CORE]     Waiting for incoming messages with known mode")
                     self.send_msg(self.mqtt_dbg, '[CORE]     Waiting for incoming messages with known mode')
                     return
-                
+
+            packet = msg['payload']
+
+            self.encoded_img.append(np.array(msg['payload'], dtype=np.uint8))
             
-            packet = bytes.fromhex(msg['payload'])
-            self.encoded_img.extend(packet)
-            log.debug(f"Packet size: {len(packet)} B")
+            
+
+            #width, height = 240, 240  # Example dimensions, adjust based on your image size
+            #img_array = np.array(packet, dtype=np.uint8).reshape((height, width, 3))
+    
+            # Convert to an image (using PIL)
+            #img = Image.fromarray(img_array)
+           
+
             
         except Exception as e:
             self.mqtt_client.loop_stop()
@@ -348,7 +358,7 @@ class Roboflow_server:
         log.info('[CORE]     Processing images...')
         self.send_msg(self.mqtt_dbg, '[CORE]     Processing images...')
         
-        if self.msg_payload == "":
+        if self.msg_payload.size == 0:
             log.warning('[CORE]     No image decoded') 
             self.send_msg(self.mqtt_dbg, '[CORE]     No image decoded')
             self.state = 'idle'
@@ -356,10 +366,10 @@ class Roboflow_server:
             self.mqtt_client.loop_start()
             return
         
-        self.msg_payload = Image.open(self.msg_payload)
+        #self.msg_payload = Image.open(self.msg_payload)
         
         
-        result = self.robo_client.infer(self.msg_payload, model_id=self.MtODEL_ID)
+        result = self.robo_client.infer(self.msg_payload, model_id=self.MODEL_ID)
         
         if result is None:
             log.warning('[CORE]     No plate detected.')
@@ -372,7 +382,17 @@ class Roboflow_server:
         
         predictions = result['predictions']
         best_plate = max(predictions, key=lambda p: p['confidence'])
+
+        if best_plate['confidence'] < 0.75:
+            log.debug('[CORE]     Too low plate confidence.')
+            self.send_msg(self.mqtt_dbg, '[CORE]     Too low plate confidence.')
+            self.state = 'idle'
+            self.msg_payload = ""
+            log.info("[CORE]     Waiting for incoming messages")
+            self.mqtt_client.loop_start()
+            return
         
+
         if self.prediction is None:
             log.debug('[CORE]     New plate detected.')
             self.send_msg(self.mqtt_dbg, '[CORE]     New plate detected.')
@@ -393,6 +413,7 @@ class Roboflow_server:
             self.mqtt_client.loop_start()
             return
         
+
         
         self.state = 'img_crop'
         
@@ -409,12 +430,13 @@ class Roboflow_server:
         T = y - h / 2
         B = y + h / 2
         
-        self.msg_payload = self.msg_payload.crop((L, T, R, B))
+        converted_img = Image.fromarray(self.msg_payload)
+        self.msg_payload = converted_img.crop((L, T, R, B))
         self.msg_payload.save("log/cropped_image.jpg")
         
-        # set again img as bytearray
+        
         byte_arr = io.BytesIO() 
-        #self.msg_payload.save(byte_arr, format='JPEG')
+        self.msg_payload.save(byte_arr, format='JPEG')
         byte_arr.seek(0) 
         self.msg_payload = byte_arr
         

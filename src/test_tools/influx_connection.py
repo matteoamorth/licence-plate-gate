@@ -34,9 +34,9 @@ class InfluxDBConnection:
 config = {
     'InfluxDB': {
         'INFLUXDB_URL': 'http://localhost:8086',
-        'INFLUXDB_TOKEN': 'WUapt2nHMnrPO4QmmkD4xdVmZrPScXxGbVVuvoQ_2sWz-6aTpLhlV2grsdAU_T9n6E2KSS-cXwn79mCcTbufrw==',    # InfluxDB token to insert
+        'INFLUXDB_TOKEN': '9qsGOMn98UMLkGyA1YBfdC-H2YcC07Rirsz8AF0ZG2496_x1KwXZEsW-qkovdtySntaPv5gWjuL7wCl-vU05bw==',    # InfluxDB token to insert
         'INFLUXDB_ORG': 'unitn',    # InfluxDB organization
-        'INFLUXDB_BUCKET': 'iot_project'
+        'INFLUXDB_BUCKET': 'license_plate_data'
     }
 }
 
@@ -44,8 +44,8 @@ config = {
 # ADD PLATE PROFILE
 plate = (
     Point("car_plates")
-    .tag("plate","MN012OP") # custom plate
-    .field("value", 1)      # 1 allowed plate, -1 disable plate
+    .tag("plate","AB123CD") # custom plate
+    .field("value", -1)      # 1 allowed plate, -1 disable plate
   )
 
 

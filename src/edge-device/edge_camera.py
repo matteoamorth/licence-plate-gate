@@ -5,9 +5,9 @@ from mqtt import MQTTClient
 DEBUG = 1
 
 
-def dprint(self,*args):
+def dprint(a):
     if DEBUG:
-        print(*args)
+        print(a)
 
 class Edge_camera:
 
@@ -16,6 +16,8 @@ class Edge_camera:
         dprint("[SETUP] Starting...")
 
         self.cf = self.load_config("config.ini")
+
+        self.device_id = self.cf['Settings']['DEVICE_ID']
 
         self.camera_setup()
 
@@ -33,6 +35,8 @@ class Edge_camera:
         self.mqtt_subscribe(self.cf['MQTT_topics']['TOPIC_SUBSCRIBE'])
 
         self.topic_pub = self.cf['MQTT_topics']['TOPIC_TARGET']
+
+        #self.mqtt_publish(self.topic_pub,f"{self.cf['MQTT_settings']['HOSTNAME']}")
 
         self.state = "core_loop"
 
@@ -82,7 +86,7 @@ class Edge_camera:
         self.pinClosed = pyb.Pin(in_, pyb.Pin.IN)
 
     def wireless_setup(self, SSID, KEY):
-        print("[SETUP] WIFI")
+        dprint("[SETUP] WIFI")
         self.wlan = network.WLAN(network.STA_IF)
         self.wlan.active(True)
         self.wlan.connect(SSID, KEY)
@@ -91,13 +95,14 @@ class Edge_camera:
             dprint('Connecting to "{:s}"...'.format(SSID))
             time.sleep_ms(1000)
 
-        dprint("[Setup] WiFi Connected ", self.wlan.ifconfig())
+        dprint("[Setup] WiFi Connected ")
 
-    def mqtt_setup(self, id_client="openmv", server_="test.mosquitto.org", port=1883, user=None, password=None):
+    def mqtt_setup(self, id_client="openmv", server_="localhost", port_=1883, user_= None, password_= None, frame = 240):
         print("[SETUP] MQTT")
-        self.mqtt_client = MQTTClient(id_client, server_, port, None, user, password)
+        self.mqtt_client = MQTTClient(id_client, server_, user = user_, password = password_, port=port_)
         self.mqtt_client.connect()
         self.mqtt_client.set_callback(self.on_message)
+        self.fragment_size = frame
 
     def mqtt_subscribe(self, topic):
         self.mqtt_client.subscribe(topic)
@@ -132,13 +137,13 @@ class Edge_camera:
 
     def core_loop(self):
         self.clock = time.clock()
-        self.mqtt_client.check_msg()
+        #self.mqtt_client.check_msg()
 
         time.sleep_ms(500)
 
         img = sensor.snapshot()
 
-        print("sending image")
+        print("[CORE] sending image")
 
         for i in range(0, len(img), self.fragment_size):
             fragment = img[i:i + self.fragment_size]
@@ -146,10 +151,11 @@ class Edge_camera:
             message = {
                 "device_id": self.device_id,
                 "mode": 3,
-                "payload": fragment.hex()
+                "payload": fragment
             }
 
             self.mqtt_publish(self.topic_pub, json.dumps(message))
+            print(fragment)
 
         end_message = {
             "device_id": self.device_id,
@@ -165,7 +171,7 @@ class Edge_camera:
     def run(self):
         while True:
             state_functions = {
-                "setup": self.setup,
+                "setup": self.__init__,
                 "core_loop": self.core_loop
             }
 
@@ -178,7 +184,7 @@ class Edge_camera:
                 break
 
 
-            dprint(self.clock.fps(), "fps")
+            dprint(f"[CORE] {self.clock.fps()} fps")
 
 
 if __name__ == "__main__":
