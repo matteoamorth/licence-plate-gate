@@ -116,7 +116,7 @@ class Roboflow_server:
         
         
         self.state = 'idle'
-        self.encoded_img = []
+        self.encoded_img = np.array()
         self.msg_payload = ""
         self.prediction = None
         self.CLIENT_ID = ""
@@ -293,17 +293,18 @@ class Roboflow_server:
                 log.debug("[CORE]     Full image received")
                 self.send_msg(self.mqtt_dbg, "[CORE]     Full image received")
                 self.mqtt_client.loop_stop()
-                self.msg_payload = np.concatenate(self.encoded_img, axis=0)
+                self.msg_payload = Image.fromarray(self.encoded_img.astype('uint8')).convert('RGB')
                 
+
                 if msg['mode'] == CAMERA_MODE:
                     self.state = 'plate_detection' 
                     log.debug(f"[CORE]     {self.state} mode")
-                    self.encoded_img = []
+                    self.encoded_img = np.array()
                     return
                 elif msg['mode'] == CHARS_MODE:
                     self.state = 'chars_detection'
                     log.debug(f"[CORE]     {self.state} mode")
-                    self.encoded_img = []
+                    self.encoded_img = np.array()
                     return
                 else:
                     self.state = 'idle'
@@ -312,21 +313,11 @@ class Roboflow_server:
                     log.info("[CORE]     Waiting for incoming messages with known mode")
                     self.send_msg(self.mqtt_dbg, '[CORE]     Waiting for incoming messages with known mode')
                     return
-
-            packet = msg['payload']
-
-            self.encoded_img.append(np.array(msg['payload'], dtype=np.uint8))
             
-            
-
-            #width, height = 240, 240  # Example dimensions, adjust based on your image size
-            #img_array = np.array(packet, dtype=np.uint8).reshape((height, width, 3))
-    
-            # Convert to an image (using PIL)
-            #img = Image.fromarray(img_array)
+            payload_np = np.array(msg['payload'])
+            self.encoded_img = np.append(self.encoded_img, payload_np)
            
 
-            
         except Exception as e:
             self.mqtt_client.loop_stop()
             log.error(f"[MQTT]     Failed to process message: {e}")
@@ -358,16 +349,16 @@ class Roboflow_server:
         log.info('[CORE]     Processing images...')
         self.send_msg(self.mqtt_dbg, '[CORE]     Processing images...')
         
-        if self.msg_payload.size == 0:
+        """  if self.msg_payload.size == 0:
             log.warning('[CORE]     No image decoded') 
             self.send_msg(self.mqtt_dbg, '[CORE]     No image decoded')
             self.state = 'idle'
             log.info("[CORE]     Waiting for incoming messages")
             self.mqtt_client.loop_start()
             return
-        
-        #self.msg_payload = Image.open(self.msg_payload)
-        
+         """
+        self.msg_payload = Image.open(self.msg_payload)
+        self.msg_payload.save("log/openmvcam_image.jpg")
         
         result = self.robo_client.infer(self.msg_payload, model_id=self.MODEL_ID)
         
@@ -383,7 +374,8 @@ class Roboflow_server:
         predictions = result['predictions']
         best_plate = max(predictions, key=lambda p: p['confidence'])
 
-        if best_plate['confidence'] < 0.75:
+        """
+        if best_plate['confidence'] < 0.65:
             log.debug('[CORE]     Too low plate confidence.')
             self.send_msg(self.mqtt_dbg, '[CORE]     Too low plate confidence.')
             self.state = 'idle'
@@ -391,7 +383,7 @@ class Roboflow_server:
             log.info("[CORE]     Waiting for incoming messages")
             self.mqtt_client.loop_start()
             return
-        
+        """
 
         if self.prediction is None:
             log.debug('[CORE]     New plate detected.')
@@ -430,8 +422,9 @@ class Roboflow_server:
         T = y - h / 2
         B = y + h / 2
         
-        converted_img = Image.fromarray(self.msg_payload)
-        self.msg_payload = converted_img.crop((L, T, R, B))
+        #converted_img = Image.fromarray(self.msg_payload)
+        #self.msg_payload = converted_img.crop((L, T, R, B))
+        self.msg_payload = self.msg_payload.crop((L, T, R, B))
         self.msg_payload.save("log/cropped_image.jpg")
         
         

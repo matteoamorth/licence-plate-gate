@@ -1,6 +1,7 @@
-import sensor, pyb
+import sensor, pyb, image
 import network, time, json
 from mqtt import MQTTClient
+
 
 DEBUG = 1
 
@@ -97,7 +98,7 @@ class Edge_camera:
 
         dprint("[Setup] WiFi Connected ")
 
-    def mqtt_setup(self, id_client="openmv", server_="localhost", port_=1883, user_= None, password_= None, frame = 240):
+    def mqtt_setup(self, id_client="openmv", server_="localhost", port_=1883, user_= None, password_= None, frame = 1060):
         print("[SETUP] MQTT")
         self.mqtt_client = MQTTClient(id_client, server_, user = user_, password = password_, port=port_)
         self.mqtt_client.connect()
@@ -139,20 +140,24 @@ class Edge_camera:
         self.clock = time.clock()
         #self.mqtt_client.check_msg()
 
-        time.sleep_ms(500)
+        time.sleep_ms(5000)
 
         img = sensor.snapshot()
+        img_bytes = bytearray(img)
 
-        print("[CORE] sending image")
+        dprint("[CORE] sending image")
 
-        for i in range(0, len(img), self.fragment_size):
-            fragment = img[i:i + self.fragment_size]
+        dprint(f"Len img:{len(img_bytes)}")
+
+        for i in range(0, len(img_bytes), self.fragment_size):
+            fragment = img_bytes[i:i + self.fragment_size]
 
             message = {
                 "device_id": self.device_id,
                 "mode": 3,
-                "payload": fragment
+                "payload": str(fragment)
             }
+
 
             self.mqtt_publish(self.topic_pub, json.dumps(message))
             print(fragment)
