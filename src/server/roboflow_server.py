@@ -116,10 +116,12 @@ class Roboflow_server:
         
         
         self.state = 'idle'
-        self.encoded_img = np.array()
+        self.msg_next_frame = 0
+        self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
         self.msg_payload = ""
         self.prediction = None
         self.CLIENT_ID = ""
+        self.busy = True
         
         self.DEVICE_ID = config['Settings']['DEVICE_ID']
         self.CLIENT_LIST = config['Settings']['CLIENT_ID'] ## make it an array
@@ -142,6 +144,7 @@ class Roboflow_server:
         if self.state == "exit":
             return
         
+        self.server_free()
     """
     #   _____        __ _            _____  ____             _                 
     #  |_   _|      / _| |          |  __ \|  _ \           | |                
@@ -257,12 +260,15 @@ class Roboflow_server:
         log.info("[CORE]     Waiting for incoming messages")
                                                                                                       
     def on_message(self, mqtt_client, userdata, msg):
+        if self.busy:
+            return
+        
         log.info('[MQTT]     Reading incoming message...')
 
         try:
             msg = json.loads(msg.payload.decode('utf-8'))
 
-            log.debug(f'[MQTT]     Received message')
+            #log.debug(f'[MQTT]     Received message')
             
             if msg['device_id'] not in self.CLIENT_LIST:
                 log.warning('[MQTT]     No record match')
@@ -292,31 +298,46 @@ class Roboflow_server:
             if msg['payload'] == 'END_DATA':
                 log.debug("[CORE]     Full image received")
                 self.send_msg(self.mqtt_dbg, "[CORE]     Full image received")
-                self.mqtt_client.loop_stop()
-                self.msg_payload = Image.fromarray(self.encoded_img.astype('uint8')).convert('RGB')
+                self.server_busy()
+                self.msg_payload = Image.fromarray(self.encoded_img, 'RGB')
                 
 
                 if msg['mode'] == CAMERA_MODE:
                     self.state = 'plate_detection' 
                     log.debug(f"[CORE]     {self.state} mode")
-                    self.encoded_img = np.array()
+                    self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
                     return
                 elif msg['mode'] == CHARS_MODE:
                     self.state = 'chars_detection'
                     log.debug(f"[CORE]     {self.state} mode")
-                    self.encoded_img = np.array()
+                    self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
                     return
                 else:
                     self.state = 'idle'
                     self.CLIENT_ID = ""
                     self.msg_payload = ""
+                    self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
+                    self.server_free()
                     log.info("[CORE]     Waiting for incoming messages with known mode")
                     self.send_msg(self.mqtt_dbg, '[CORE]     Waiting for incoming messages with known mode')
                     return
             
-            payload_np = np.array(msg['payload'])
-            self.encoded_img = np.append(self.encoded_img, payload_np)
-           
+            if self.msg_next_frame != int(msg['fr_n']):
+                log.warning(f"[MQTT]     Lost fragment {self.msg_next_frame}")
+                self.send_msg(self.mqtt_dbg, f"[MQTT]     Lost fragment {self.msg_next_frame}")
+                self.server_busy()
+                self.server_free()
+                self.msg_next_frame = 0
+                
+                self.state = 'idle'
+                self.CLIENT_ID = ""
+                self.msg_payload = ""
+                self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
+                return
+                
+            fragment = np.array(msg['payload'], dtype=np.uint8)
+            self.encoded_img[int(msg['fr_n']), :fragment.shape[0], :] = fragment
+            self.msg_next_frame += 1
 
         except Exception as e:
             self.mqtt_client.loop_stop()
@@ -354,10 +375,10 @@ class Roboflow_server:
             self.send_msg(self.mqtt_dbg, '[CORE]     No image decoded')
             self.state = 'idle'
             log.info("[CORE]     Waiting for incoming messages")
-            self.mqtt_client.loop_start()
+            self.server_free()
             return
          """
-        self.msg_payload = Image.open(self.msg_payload)
+        #self.msg_payload = Image.open(self.msg_payload)
         self.msg_payload.save("log/openmvcam_image.jpg")
         
         result = self.robo_client.infer(self.msg_payload, model_id=self.MODEL_ID)
@@ -368,22 +389,22 @@ class Roboflow_server:
             self.state = 'idle'
             self.msg_payload = ""
             log.info("[CORE]     Waiting for incoming messages")
-            self.mqtt_client.loop_start()
+            self.server_free()
             return
         
         predictions = result['predictions']
         best_plate = max(predictions, key=lambda p: p['confidence'])
 
-        """
+        
         if best_plate['confidence'] < 0.65:
             log.debug('[CORE]     Too low plate confidence.')
             self.send_msg(self.mqtt_dbg, '[CORE]     Too low plate confidence.')
             self.state = 'idle'
             self.msg_payload = ""
             log.info("[CORE]     Waiting for incoming messages")
-            self.mqtt_client.loop_start()
+            self.server_free()
             return
-        """
+        
 
         if self.prediction is None:
             log.debug('[CORE]     New plate detected.')
@@ -392,7 +413,7 @@ class Roboflow_server:
             self.msg_payload = ""
             self.state = 'idle'
             log.info("[CORE]     Waiting for incoming messages")
-            self.mqtt_client.loop_start()
+            self.server_free()
             return
 
         if self.prediction['width'] > best_plate['width']:
@@ -402,7 +423,7 @@ class Roboflow_server:
             self.msg_payload = ""
             self.state = 'idle'
             log.info("[CORE]     Waiting for incoming messages")
-            self.mqtt_client.loop_start()
+            self.server_free()
             return
         
 
@@ -454,7 +475,7 @@ class Roboflow_server:
             self.send_msg(self.mqtt_dbg, '[CORE]     No image decoded')
             self.state = 'idle'
             log.info("[CORE]     Waiting for incoming messages")
-            self.mqtt_client.loop_start()
+            self.server_free()
             return
         
         pipeline = keras_ocr.pipeline.Pipeline()
@@ -513,7 +534,7 @@ class Roboflow_server:
         log.debug("[CORE] MQTT connection restarting")
         self.state = "idle" 
         self.msg_payload = ""
-        self.mqtt_client.loop_start()
+        self.server_free()
         
         log.info("[CORE]     Waiting for incoming messages")                                            
     
@@ -529,6 +550,40 @@ class Roboflow_server:
     #                         |___/             
     """                                                                      
     # Lifecycle
+    
+    def server_busy(self):
+        self.busy = True
+        msg = {
+            "device_id": self.CLIENT_ID,
+            "payload": "server_busy"
+        }
+            
+        if self.send_msg(self.mqtt_targ, json.dumps(msg)) == mqtt.MQTT_ERR_SUCCESS:
+            log.debug('[MQTT]     Busy')
+            self.send_msg(self.mqtt_dbg, '[MQTT]     Busy')
+            self.CLIENT_ID = ""
+        else:
+            log.error("[MQTT]     Can't block client")
+            self.send_msg(self.mqtt_dbg, "[MQTT]     Can't send messages")
+            self.state = "exit"
+    
+    def server_free(self):
+        
+        msg = {
+            "device_id": self.CLIENT_ID,
+            "payload": "server_free"
+        }
+            
+        if self.send_msg(self.mqtt_targ, json.dumps(msg)) == mqtt.MQTT_ERR_SUCCESS:
+            log.debug('[MQTT]     Server available')
+            self.send_msg(self.mqtt_dbg, '[MQTT]     Server available')
+            self.CLIENT_ID = ""
+            self.busy = False
+        else:
+            log.error("[MQTT]     Can't enable client")
+            self.send_msg(self.mqtt_dbg, "[MQTT]     Can't send messages")
+            self.state = "exit"
+            
     def open_gate(self):
         msg = {
             "device_id": self.CLIENT_ID,

@@ -26,6 +26,7 @@ class Edge_camera:
 
         self.wireless_setup(self.cf['WiFi']['SSID'], self.cf['WiFi']['PASSWORD'])
 
+
         self.mqtt_setup(self.cf['MQTT_settings']['HOSTNAME'],
                         self.cf['MQTT_settings']['SERVER'],
                         self.cf['MQTT_settings']['PORT'],
@@ -33,7 +34,8 @@ class Edge_camera:
                         self.cf['MQTT_settings']['PASSWORD'],
                         )
 
-        self.mqtt_subscribe(self.cf['MQTT_topics']['TOPIC_SUBSCRIBE'])
+        #self.mqtt_subscribe(self.cf['MQTT_topics']['TOPIC_SUBSCRIBE'])
+        self.mqtt_subscribe("test/plate_check")
 
         self.topic_pub = self.cf['MQTT_topics']['TOPIC_TARGET']
 
@@ -41,6 +43,40 @@ class Edge_camera:
 
         self.state = "core_loop"
 
+    def on_message(self, topic, msg):
+        msg = json.loads(msg.decode())
+        dprint(f"msg: {msg}")
+
+        if msg['device_id'] != self.device_id:
+            dprint("[MQTT] Not for this device")
+            return
+
+        if msg['payload'] == 'gate_open':
+            if self.pinClosed.value() == 1:
+                dprint("[CORE] Closing gate")
+                self.pinOut.high()
+                time.sleep_ms(200)
+                self.pinOut.low()
+
+        if msg['payload'] == 'gate_close':
+            if self.pinClosed.value() == 0:
+                dprint("[CORE] Closing gate")
+                self.pinOut.high()
+                time.sleep_ms(200)
+                self.pinOut.low()
+
+        if msg['payload'] == 'server_busy':
+            dprint('Server busy, setting idle state')
+            self.state = "idle"
+            return
+
+        if msg['payload'] == 'server_free':
+            dprint('Server free, restarting process')
+            self.state = "core_loop"
+            return
+
+
+        msg = ""
 
     def parse_value(self, value):
         value = value.strip()
@@ -98,10 +134,10 @@ class Edge_camera:
 
         dprint("[Setup] WiFi Connected ")
 
-    def mqtt_setup(self, id_client="openmv", server_="localhost", port_=1883, user_= None, password_= None, frame = 1060):
+    def mqtt_setup(self, id_client="openmv", server_="localhost", port_=1883, user_= None, password_= None, frame = 240):
         print("[SETUP] MQTT")
         self.mqtt_client = MQTTClient(id_client, server_, user = user_, password = password_, port=port_)
-        self.mqtt_client.connect()
+        self.mqtt_client.connect(timeout = 10.0)
         self.mqtt_client.set_callback(self.on_message)
         self.fragment_size = frame
 
@@ -111,56 +147,34 @@ class Edge_camera:
     def mqtt_publish(self, topic, message):
         self.mqtt_client.publish(topic, message)
 
-    def on_message(self):
-        dprint("[MQTT] Incoming message")
-
-        msg = json.loads(msg.payload.decode())
-
-        if msg['device_id'] != self.device_id:
-            dprint("[MQTT] Not for this device")
-            return
-
-        if msg['payload'] == 'gate_open':
-            if self.pinClosed.value() == 1:
-                dprint("[CORE] Closing gate")
-                self.pinOut.high()
-                time.sleep_ms(200)
-                self.pinOut.low()
-
-        if msg['payload'] == 'gate_close':
-            if self.pinClosed.value() == 0:
-                dprint("[CORE] Closing gate")
-                self.pinOut.high()
-                time.sleep_ms(200)
-                self.pinOut.low()
-
-        msg = ""
 
     def core_loop(self):
         self.clock = time.clock()
-        #self.mqtt_client.check_msg()
-
-        time.sleep_ms(5000)
+        self.mqtt_client.wait_msg()
+        if self.state != 'core_loop':
+            return
 
         img = sensor.snapshot()
-        img_bytes = bytearray(img)
 
         dprint("[CORE] sending image")
 
-        dprint(f"Len img:{len(img_bytes)}")
-
-        for i in range(0, len(img_bytes), self.fragment_size):
-            fragment = img_bytes[i:i + self.fragment_size]
+        for i in range(0, 240*240, self.fragment_size):
+            fragment = img[i:i + self.fragment_size]
 
             message = {
                 "device_id": self.device_id,
                 "mode": 3,
-                "payload": str(fragment)
+                "fr_n": i / 240,
+                "payload": fragment
             }
 
 
+            dprint(f"{i/240 + 1} / 240 img rows")
             self.mqtt_publish(self.topic_pub, json.dumps(message))
-            print(fragment)
+            if i == 28800:
+                self.mqtt_client.wait_msg()
+                if self.state != 'core_loop':
+                    return
 
         end_message = {
             "device_id": self.device_id,
@@ -168,16 +182,26 @@ class Edge_camera:
             "payload": "END_DATA"
         }
 
+        self.mqtt_client.wait_msg()
+        if self.state != 'core_loop':
+            return
+
         self.mqtt_publish(self.topic_pub, json.dumps(end_message))
 
         img = None
+
+    def idle(self):
+        time.sleep_ms(300)
+        self.mqtt_client.wait_msg()
+        return
 
 
     def run(self):
         while True:
             state_functions = {
                 "setup": self.__init__,
-                "core_loop": self.core_loop
+                "core_loop": self.core_loop,
+                "idle": self.idle
             }
 
             state_function = state_functions.get(self.state)
