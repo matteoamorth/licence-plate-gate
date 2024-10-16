@@ -137,7 +137,7 @@ class Edge_camera:
     def mqtt_setup(self, id_client="openmv", server_="localhost", port_=1883, user_= None, password_= None, frame = 240):
         print("[SETUP] MQTT")
         self.mqtt_client = MQTTClient(id_client, server_, user = user_, password = password_, port=port_)
-        self.mqtt_client.connect(timeout = 10.0)
+        self.mqtt_client.connect(timeout = 0.75)
         self.mqtt_client.set_callback(self.on_message)
         self.fragment_size = frame
 
@@ -171,7 +171,7 @@ class Edge_camera:
 
             dprint(f"{i/240 + 1} / 240 img rows")
             self.mqtt_publish(self.topic_pub, json.dumps(message))
-            if i == 28800:
+            if i % 14400 == 0:
                 self.mqtt_client.wait_msg()
                 if self.state != 'core_loop':
                     return
