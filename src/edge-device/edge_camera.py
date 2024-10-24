@@ -170,6 +170,7 @@ class Edge_camera:
 
 
             dprint(f"{i/240 + 1} / 240 img rows")
+            
             self.mqtt_publish(self.topic_pub, json.dumps(message))
             if i % 14400 == 0:
                 self.mqtt_client.wait_msg()

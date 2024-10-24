@@ -300,6 +300,7 @@ class Roboflow_server:
                 self.send_msg(self.mqtt_dbg, "[CORE]     Full image received")
                 self.server_busy()
                 self.msg_payload = Image.fromarray(self.encoded_img, 'RGB')
+                self.msg_next_frame = 0
                 
 
                 if msg['mode'] == CAMERA_MODE:
@@ -314,10 +315,11 @@ class Roboflow_server:
                     return
                 else:
                     self.state = 'idle'
-                    self.CLIENT_ID = ""
+                    
                     self.msg_payload = ""
                     self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
                     self.server_free()
+                    
                     log.info("[CORE]     Waiting for incoming messages with known mode")
                     self.send_msg(self.mqtt_dbg, '[CORE]     Waiting for incoming messages with known mode')
                     return
@@ -330,7 +332,6 @@ class Roboflow_server:
                 self.msg_next_frame = 0
                 
                 self.state = 'idle'
-                self.CLIENT_ID = ""
                 self.msg_payload = ""
                 self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
                 return
@@ -561,7 +562,7 @@ class Roboflow_server:
         if self.send_msg(self.mqtt_targ, json.dumps(msg)) == mqtt.MQTT_ERR_SUCCESS:
             log.debug('[MQTT]     Busy')
             self.send_msg(self.mqtt_dbg, '[MQTT]     Busy')
-            self.CLIENT_ID = ""
+            
         else:
             log.error("[MQTT]     Can't block client")
             self.send_msg(self.mqtt_dbg, "[MQTT]     Can't send messages")
@@ -577,7 +578,6 @@ class Roboflow_server:
         if self.send_msg(self.mqtt_targ, json.dumps(msg)) == mqtt.MQTT_ERR_SUCCESS:
             log.debug('[MQTT]     Server available')
             self.send_msg(self.mqtt_dbg, '[MQTT]     Server available')
-            self.CLIENT_ID = ""
             self.busy = False
         else:
             log.error("[MQTT]     Can't enable client")
@@ -593,7 +593,7 @@ class Roboflow_server:
         if self.send_msg(self.mqtt_targ, json.dumps(msg)) == mqtt.MQTT_ERR_SUCCESS:
             log.info('[MQTT]     Sending opening gate..')
             self.send_msg(self.mqtt_dbg, '[MQTT]     Reading incoming message...')
-            self.CLIENT_ID = ""
+            
         else:
             log.error("[MQTT]     Can't open gate, quitting...")
             self.send_msg(self.mqtt_dbg, '[MQTT]     Reading incoming message...')

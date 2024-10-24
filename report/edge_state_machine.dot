@@ -1,0 +1,5 @@
+digraph "edge_state_machine"{
+Setup->Core [label="Settings\nloaded"]
+Core->Idle [dir=forward, xlabel="   Server busy"]
+Idle->Core [label="                Server free"]
+}

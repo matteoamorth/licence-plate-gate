@@ -1,0 +1,21 @@
+digraph StateMachine {
+    setup -> idle
+    "idle" -> "message detection" [label="Incoming\nmessage"];
+    "message detection" -> "plate detection" [label="Message accepted    "]
+    "message detection" -> "idle" [label="Message\nrejected"]
+    "message detection" -> "idle" [label="Transmission\nreset"]
+
+    "plate detection" -> "chars detection" [label="Second image\nIncoming vehicle"]
+    "plate detection" -> "idle" [label="First image         "]
+    "plate detection" -> "idle" [label="Vehicle\nleaving"]
+
+    "chars detection" -> "string detection" [label="Chararcters recognized"]
+    "chars detection" -> "idle" [label="No characters found"]
+
+    "string detection" -> "DB Interrogation"
+
+    "DB Interrogation" -> "idle"
+    "DB Interrogation" -> "open message"
+
+    "open message" -> "idle"
+}
