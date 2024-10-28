@@ -4,7 +4,7 @@ from mqtt import MQTTClient
 
 
 DEBUG = 1
-
+IMG_SIZE = int(240)
 
 def dprint(a):
     if DEBUG:
@@ -114,7 +114,7 @@ class Edge_camera:
         sensor.reset()
         sensor.set_pixformat(sensor.RGB565)
         sensor.set_framesize(sensor.QVGA)
-        sensor.set_windowing((240, 240))
+        sensor.set_windowing((IMG_SIZE, IMG_SIZE))
         sensor.skip_frames(time=2000)
 
     def gpio_setup(self, in_ = "P4", out = "P5"):
@@ -134,10 +134,11 @@ class Edge_camera:
 
         dprint("[Setup] WiFi Connected ")
 
-    def mqtt_setup(self, id_client="openmv", server_="localhost", port_=1883, user_= None, password_= None, frame = 240):
+    def mqtt_setup(self, id_client="openmv", server_="localhost", port_=1883, user_= None, password_= None, frame = IMG_SIZE):
         print("[SETUP] MQTT")
         self.mqtt_client = MQTTClient(id_client, server_, user = user_, password = password_, port=port_)
         self.mqtt_client.connect(timeout = 0.75)
+
         self.mqtt_client.set_callback(self.on_message)
         self.fragment_size = frame
 
@@ -158,19 +159,19 @@ class Edge_camera:
 
         dprint("[CORE] sending image")
 
-        for i in range(0, 240*240, self.fragment_size):
+        for i in range(0, IMG_SIZE*IMG_SIZE, self.fragment_size):
             fragment = img[i:i + self.fragment_size]
 
             message = {
                 "device_id": self.device_id,
                 "mode": 3,
-                "fr_n": i / 240,
+                "fr_n": i / IMG_SIZE,
                 "payload": fragment
             }
 
 
-            dprint(f"{i/240 + 1} / 240 img rows")
-            
+            dprint(f"{i/IMG_SIZE + 1} / {IMG_SIZE} img rows")
+
             self.mqtt_publish(self.topic_pub, json.dumps(message))
             if i % 14400 == 0:
                 self.mqtt_client.wait_msg()

@@ -29,6 +29,7 @@ import paho.mqtt.client as mqtt
 # debug
 import logging
 import colorlog
+import shutil
 
 
 #   _                     _             _   _   _                 
@@ -46,6 +47,8 @@ CAMERA_MODE  = 3
 
 DEPRECATED_PLATE = -1
 ACTIVE_PLATE = 1
+IMG_DIM = 240 
+#240
 
 
 # Log
@@ -117,10 +120,10 @@ class Roboflow_server:
         
         self.state = 'idle'
         self.msg_next_frame = 0
-        self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
+        self.encoded_img = np.zeros(shape=(IMG_DIM,IMG_DIM,3), dtype=np.uint8)
         self.msg_payload = ""
         self.prediction = None
-        self.CLIENT_ID = ""
+        self.CLIENT_ID = "edge_device_1234"
         self.busy = True
         
         self.DEVICE_ID = config['Settings']['DEVICE_ID']
@@ -263,7 +266,7 @@ class Roboflow_server:
         if self.busy:
             return
         
-        log.info('[MQTT]     Reading incoming message...')
+        #log.info('[MQTT]     Reading incoming message...')
 
         try:
             msg = json.loads(msg.payload.decode('utf-8'))
@@ -306,18 +309,18 @@ class Roboflow_server:
                 if msg['mode'] == CAMERA_MODE:
                     self.state = 'plate_detection' 
                     log.debug(f"[CORE]     {self.state} mode")
-                    self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
+                    self.encoded_img = np.zeros(shape=(IMG_DIM,IMG_DIM,3), dtype=np.uint8)
                     return
                 elif msg['mode'] == CHARS_MODE:
                     self.state = 'chars_detection'
                     log.debug(f"[CORE]     {self.state} mode")
-                    self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
+                    self.encoded_img = np.zeros(shape=(IMG_DIM,IMG_DIM,3), dtype=np.uint8)
                     return
                 else:
                     self.state = 'idle'
                     
                     self.msg_payload = ""
-                    self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
+                    self.encoded_img = np.zeros(shape=(IMG_DIM,IMG_DIM,3), dtype=np.uint8)
                     self.server_free()
                     
                     log.info("[CORE]     Waiting for incoming messages with known mode")
@@ -333,12 +336,22 @@ class Roboflow_server:
                 
                 self.state = 'idle'
                 self.msg_payload = ""
-                self.encoded_img = np.zeros(shape=(240,240,3), dtype=np.uint8)
+                self.encoded_img = np.zeros(shape=(IMG_DIM,IMG_DIM,3), dtype=np.uint8)
                 return
                 
             fragment = np.array(msg['payload'], dtype=np.uint8)
             self.encoded_img[int(msg['fr_n']), :fragment.shape[0], :] = fragment
             self.msg_next_frame += 1
+            
+            perc = self.msg_next_frame / IMG_DIM
+            terminal_w = shutil.get_terminal_size().columns - 10
+            received_step = int(perc * terminal_w)
+            bar = "#" * received_step + " " * (terminal_w - received_step)
+            print(f"\r[{bar}] {perc * 100:.2f}%", end="")
+            
+            
+            
+            
 
         except Exception as e:
             self.mqtt_client.loop_stop()
@@ -394,10 +407,21 @@ class Roboflow_server:
             return
         
         predictions = result['predictions']
+        
+        if not predictions:
+            log.debug('[CORE]     No plates detected.')
+            self.send_msg(self.mqtt_dbg, '[CORE]     No plates detected.')
+            self.state = 'idle'
+            self.msg_payload = ""
+            log.info("[CORE]     Waiting for incoming messages")
+            self.server_free()
+            return
+        
+        
         best_plate = max(predictions, key=lambda p: p['confidence'])
 
         
-        if best_plate['confidence'] < 0.65:
+        if best_plate['confidence'] < 0.75:
             log.debug('[CORE]     Too low plate confidence.')
             self.send_msg(self.mqtt_dbg, '[CORE]     Too low plate confidence.')
             self.state = 'idle'
@@ -491,6 +515,16 @@ class Roboflow_server:
         
         log.debug(f"[CORE]     Recognized text: {recognized_text}")
         self.send_msg(self.mqtt_dbg, f"[CORE]     Recognized text: {recognized_text}")
+        
+        if len(recognized_text) < 6:
+            log.warning('[CORE]     String too short'); 
+            self.send_msg(self.mqtt_dbg, '[CORE]     String too short')
+            self.msg_payload = ""
+            self.state = 'idle'
+            log.info("[CORE]     Waiting for incoming messages")
+            self.server_free()
+            return
+        
         self.msg_payload = recognized_text
         self.state = 'string_detection'
     
